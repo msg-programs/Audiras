@@ -79,7 +79,7 @@ public class RadioRecorder extends Thread {
 
 	@Override
 	public void run() {
-		if (RecordingMaster.checkFull( rs.id)) {
+		if (RecordingMaster.checkFull(rs.id)) {
 			rs.lock = true;
 			return;
 		}
@@ -144,7 +144,7 @@ public class RadioRecorder extends Thread {
 			tag.setArtist(prevC);
 			tag.setTitle(prevT);
 
-			if (RecordingMaster.checkFull( rs.id)) {
+			if (RecordingMaster.checkFull(rs.id)) {
 				System.out.println("Check failed");
 				rs.lock = true;
 				rs.stopRec();
@@ -152,30 +152,30 @@ public class RadioRecorder extends Thread {
 			} else {
 				RecordingMaster.addRecording(rs.id,
 						new File(dir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3"));
-				
+
 				System.out.print("Saving: ");
 				System.out.println(prevC + " - " + prevT + ".mp3");
-				
+
 				if (prevC.contains("\\")) {
 					String[] parts = prevC.split("\\");
 					prevC = parts[0] + parts[1];
 				}
-				
+
 				if (prevC.contains("/")) {
 					String[] parts = prevC.split("/");
 					prevC = parts[0] + parts[1];
 				}
-				
+
 				if (prevT.contains("\\")) {
 					String[] parts = prevT.split("\\");
 					prevT = parts[0] + parts[1];
 				}
-				
+
 				if (prevT.contains("/")) {
 					String[] parts = prevT.split("/");
 					prevT = parts[0] + parts[1];
 				}
-				
+
 				file.save(dir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3");
 			}
 

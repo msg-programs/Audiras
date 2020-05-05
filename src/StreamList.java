@@ -30,23 +30,23 @@ public class StreamList {
 
 			while ((line = br.readLine()) != null) {
 				if (!line.equals("")) {
-				for (RadioStation rs : RecordingMaster.stations) {
+					for (RadioStation rs : RecordingMaster.stations) {
 
-					if (rs != null) {
+						if (rs != null) {
 //						System.out.println(rs.url);
-						if (rs.url.equals(line)) {
-							a = true;
+							if (rs.url.equals(line)) {
+								a = true;
+							}
 						}
-					}
 //					System.out.println(a);
-				}
+					}
 
-				if (!a) {
-					stations.add(new RadioStation(line, i));
-					i++;
-				}
+					if (!a) {
+						stations.add(new RadioStation(line, i));
+						i++;
+					}
 
-				a = false;
+					a = false;
 				}
 			}
 
@@ -70,17 +70,17 @@ public class StreamList {
 			byte[] b = new byte[4096];
 			is.readNBytes(b, 0, b.length);
 			String a = new String(b);
-			
+
 //			System.out.println(new String(b));
-			
-			if (!a.contains("title")||!(a.length()>5)) {
+
+			if (!a.contains("title") || !(a.length() > 5)) {
 				JOptionPane.showMessageDialog(null, Lang.get("no_mta"));
-				i=1/0;
+				i = 1 / 0;
 			}
-			
+
 			if (!a.contains("mpeg")) {
 				JOptionPane.showMessageDialog(null, Lang.get("not_supp"));
-				i=1/0;
+				i = 1 / 0;
 			}
 
 //			System.out.println("10");
@@ -97,7 +97,7 @@ public class StreamList {
 	public static RadioStation add(String s) {
 		try {
 			Files.write(SRC.toPath(), new String("\n" + s).getBytes(), StandardOpenOption.APPEND);
-			RadioStation rs = new RadioStation(s,stations.size());
+			RadioStation rs = new RadioStation(s, stations.size());
 			stations.add(rs);
 			return rs;
 		} catch (Exception e) {

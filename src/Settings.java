@@ -17,11 +17,12 @@ public class Settings {
 
 	private static HashMap<String, String> settings = new HashMap<>();
 
-	private static final File INI = new File(System.getenv("APPDATA") + "/Audiras/settings.ini");
-	public static final File ICO = new File(System.getenv("APPDATA") + "/Audiras/icon.png");
-	public static final File BAT = new File(System.getenv("APPDATA") + "/Audiras/autoexec.bat");
-	public static final File AUD_DIR = new File(
+	public static final File THIS_DIR = new File(
 			ClassLoader.getSystemClassLoader().getResource(".").getPath().replaceAll("%20", " "));
+
+	private static final File INI = new File(THIS_DIR + "/data/settings.ini");
+	public static final File ICO = new File(THIS_DIR + "/data/icon.png");
+	public static final File BAT = new File(THIS_DIR + "/data/autoexec.bat");
 
 	public static final int NUM_PER = 0;
 	public static final int SIZE_PER = 1;
@@ -37,17 +38,16 @@ public class Settings {
 		}
 
 		if (!BAT.exists()) {
-			File aud = new File(AUD_DIR.getAbsolutePath() + "\\Audiras.jar");
 			try {
 
 				PrintWriter pw = new PrintWriter(BAT);
 
 				pw.println("@echo off");
-				pw.println("java -jar \"" + aud.getAbsolutePath().replaceAll("%20", " "));
+				pw.println("java -jar \"" + THIS_DIR.getAbsolutePath() + "/Audiras.jar\"");
 				pw.close();
 			} catch (Exception e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Error while creating .bat!");
+				JOptionPane.showMessageDialog(null, "Error while creating autostart file!");
 			}
 		}
 
@@ -67,7 +67,10 @@ public class Settings {
 	}
 
 	private static void firstDiag() {
-		new File(System.getenv("APPDATA") + "/Audiras").mkdirs();
+		if (!new File(THIS_DIR + "/data").mkdirs()) {
+			JOptionPane.showMessageDialog(null, "Can't create /data directory!");
+			System.exit(0);
+		}
 
 		// GET LANG FILE =============================
 		JOptionPane.showMessageDialog(null, "Select language file");
@@ -75,7 +78,7 @@ public class Settings {
 		boolean b = true;
 		do {
 			JFileChooser jf = new JFileChooser();
-			jf.setCurrentDirectory(new File(System.getProperty("user.home")));
+			jf.setCurrentDirectory(THIS_DIR);
 			int result = jf.showOpenDialog(null);
 			if (result == JFileChooser.APPROVE_OPTION) {
 				file = jf.getSelectedFile();
@@ -89,10 +92,10 @@ public class Settings {
 				}
 			} else {
 
-				if (file.canWrite() && file.canRead()) {
+				if (file.canRead()) {
 					b = false;
 				} else {
-					JOptionPane.showMessageDialog(null, "Can't read from/write to this directory!");
+					JOptionPane.showMessageDialog(null, "Can't read from this file!");
 				}
 			}
 		} while (b);
@@ -272,7 +275,7 @@ public class Settings {
 				PrintWriter pw = new PrintWriter(vbs);
 
 				pw.println("Set ws = CreateObject(\"Wscript.Shell\")");
-				pw.println("ws.run \"cmd /c "+ BAT.getAbsolutePath()+"\",vbhide");
+				pw.println("ws.run \"cmd /c " + BAT.getAbsolutePath() + "\",vbhide");
 
 				pw.close();
 			} catch (FileNotFoundException e) {
@@ -291,7 +294,7 @@ public class Settings {
 
 	public static String getStreamDir() {
 		if (!settings.containsKey("target_dir")) {
-			settings.put("target_dir", AUD_DIR.getAbsolutePath() + "\\Recordings");
+			settings.put("target_dir", THIS_DIR.getAbsolutePath() + "/Recordings");
 		}
 
 		return settings.get("target_dir");
@@ -309,7 +312,6 @@ public class Settings {
 		if (!settings.containsKey("max_threads")) {
 			settings.put("max_threads", Integer.toString(Runtime.getRuntime().availableProcessors() * 2));
 		}
-
 		return Integer.valueOf(settings.get("max_threads"));
 	}
 
@@ -337,14 +339,11 @@ public class Settings {
 	}
 
 	public static void setBlockMode(int selectedIndex) {
-
 		settings.put("block_cond", String.valueOf(selectedIndex));
 	}
 
 	public static void setBlockMax(String text) {
-
 		settings.put("block_max", String.valueOf(Float.valueOf(text.replaceAll(",", ".")) * 1000f));
-
 	}
 
 	public static void setBootRec(boolean selected) {
@@ -384,36 +383,3 @@ public class Settings {
 	}
 
 }
-
-// old redording dir init
-//boolean a = true;
-//
-//		file = null;
-//
-//		do {
-//
-//			JFileChooser jf = new JFileChooser();
-//			jf.setCurrentDirectory(new File(System.getProperty("user.home")));
-//			jf.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-//			int result = jf.showOpenDialog(null);
-//			if (result == JFileChooser.APPROVE_OPTION) {
-//				file = jf.getSelectedFile();
-//			}
-//
-//			if (file == null) {
-//				int i = JOptionPane.showConfirmDialog(null, Lang.get("inv_dir"), "Error", JOptionPane.OK_CANCEL_OPTION);
-//				if (i == 2) {
-//					JOptionPane.showMessageDialog(null, Lang.get("stp_abort"));
-//					System.exit(0);
-//				}
-//			} else {
-//
-//				if (file.canWrite() && file.canRead()) {
-//					a = false;
-//				} else {
-//					JOptionPane.showMessageDialog(null, Lang.get("io_err"));
-//				}
-//			}
-//		} while (a);
-//		
-//		settings.put("target_dir", file.getAbsolutePath());

@@ -10,8 +10,8 @@ import javax.imageio.ImageIO;
 
 public class RadioMain {
 
-	public static Window win=null;
-	
+	public static Window win = null;
+
 	public static void main(String[] args) {
 
 		Settings.init();
@@ -33,12 +33,12 @@ public class RadioMain {
 
 				MenuItem open = new MenuItem(Lang.get("opn_win"));
 				MenuItem close = new MenuItem(Lang.get("ext_fin"));
-				
+
 				ActionListener al = new ActionListener() {
 					public void actionPerformed(ActionEvent ae) {
 						if (ae.getSource().equals(open)) {
-							if (win==null) {
-								win=new Window();
+							if (win == null) {
+								win = new Window();
 							}
 						}
 						if (ae.getSource().equals(close)) {
@@ -48,11 +48,10 @@ public class RadioMain {
 				};
 
 				PopupMenu popup = new PopupMenu();
-			
+
 				open.addActionListener(al);
 				popup.add(open);
 
-				
 				close.addActionListener(al);
 				popup.add(close);
 

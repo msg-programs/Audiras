@@ -49,7 +49,7 @@ public class RecordingMaster {
 		}
 	}
 
-	public static synchronized boolean checkFull( int id) {
+	public static synchronized boolean checkFull(int id) {
 
 		boolean full = false;
 
@@ -58,14 +58,14 @@ public class RecordingMaster {
 
 			System.out.println("Settings.NUM_ALL | # of files: " + files.size() + "\nNumber of max. files: "
 					+ Settings.getBlockMax() / 1000);
-			System.out.println("Should everything be stopped? " + (files.size()  >= Settings.getBlockMax() / 1000));
-			full = files.size()-1  >= Settings.getBlockMax() / 1000;
+			System.out.println("Should everything be stopped? " + (files.size() >= Settings.getBlockMax() / 1000));
+			full = files.size() - 1 >= Settings.getBlockMax() / 1000;
 
 			if (full) {
 				for (RadioStation rs : stations) {
-					if (rs!=null) {
-					rs.lock = true;
-					rs.stopRec();
+					if (rs != null) {
+						rs.lock = true;
+						rs.stopRec();
 					}
 				}
 			}
@@ -82,13 +82,13 @@ public class RecordingMaster {
 			}
 			System.out.println("Settings.NUM_PER | # of files in Stream " + id + ": " + count
 					+ "\nNumber of max. files: " + Settings.getBlockMax() / 1000);
-			System.out.println("Should this stream be stopped? " + (count  >= Settings.getBlockMax() / 1000));
+			System.out.println("Should this stream be stopped? " + (count >= Settings.getBlockMax() / 1000));
 
-			full = count-1 >= Settings.getBlockMax() / 1000f;
+			full = count - 1 >= Settings.getBlockMax() / 1000f;
 
-			if (full && stations[id-1] != null) {
-				stations[id-1].lock = true;
-				stations[id-1].stopRec();
+			if (full && stations[id - 1] != null) {
+				stations[id - 1].lock = true;
+				stations[id - 1].stopRec();
 
 			}
 			break;
@@ -111,9 +111,9 @@ public class RecordingMaster {
 			full = Settings.getBlockMax() <= size;
 			if (full) {
 				for (RadioStation rs : stations) {
-					if (rs!=null) {
-					rs.lock = true;
-					rs.stopRec();
+					if (rs != null) {
+						rs.lock = true;
+						rs.stopRec();
 					}
 				}
 			}
@@ -136,9 +136,9 @@ public class RecordingMaster {
 
 			full = Settings.getBlockMax() <= size2;
 
-			if (full && stations[id-1] != null) {
-				stations[id-1].lock = true;
-				stations[id-1].stopRec();
+			if (full && stations[id - 1] != null) {
+				stations[id - 1].lock = true;
+				stations[id - 1].stopRec();
 
 			}
 

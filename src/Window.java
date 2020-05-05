@@ -412,7 +412,7 @@ public class Window extends JFrame implements ActionListener, ListSelectionListe
 
 					model2.removeRow(0);
 					add.setEnabled(true);
-					
+
 					StreamList.stations.add(rs);
 					String[] s = { rs.name };
 					model2.addRow(s);
@@ -454,7 +454,7 @@ public class Window extends JFrame implements ActionListener, ListSelectionListe
 					add.setEnabled(false);
 					return;
 				}
-				
+
 				for (int i = 0; i < Settings.getMaxStreams(); i++) {
 					RadioStation ra = RecordingMaster.stations[i];
 
@@ -464,8 +464,8 @@ public class Window extends JFrame implements ActionListener, ListSelectionListe
 						StreamList.stations.remove(table2.getSelectedRow());
 						model2.removeRow(table2.getSelectedRow());
 						model.setValueAt(ra.name, i, 0);
-						if (model2.getRowCount()==0) {
-							String[] s = {Lang.get("lst_empty")};
+						if (model2.getRowCount() == 0) {
+							String[] s = { Lang.get("lst_empty") };
 							add.setEnabled(false);
 							model2.addRow(s);
 						}
