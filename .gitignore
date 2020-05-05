@@ -1,0 +1,7 @@
+/bin/
+.settings
+.recs
+.classpath
+.project
+streams.txt
+/recs/
