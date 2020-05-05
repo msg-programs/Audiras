@@ -1,7 +1,11 @@
+package streamlogic;
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+
+import settings.Lang;
+import settings.Settings;
 
 public class RadioStation {
 

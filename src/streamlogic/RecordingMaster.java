@@ -1,5 +1,8 @@
+package streamlogic;
 import java.io.File;
 import java.util.ArrayList;
+
+import settings.Settings;
 
 public class RecordingMaster {
 

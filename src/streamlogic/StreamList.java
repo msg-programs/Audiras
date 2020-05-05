@@ -1,3 +1,4 @@
+package streamlogic;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,6 +10,8 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+
+import settings.Lang;
 
 public class StreamList {
 

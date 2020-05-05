@@ -1,7 +1,10 @@
+package gui;
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import settings.Lang;
 
 public class InfoPanel extends JPanel {
 

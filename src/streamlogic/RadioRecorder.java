@@ -1,3 +1,4 @@
+package streamlogic;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -9,6 +10,9 @@ import javax.swing.JOptionPane;
 
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.Mp3File;
+
+import settings.Lang;
+import settings.Settings;
 
 public class RadioRecorder extends Thread {
 
