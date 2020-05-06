@@ -5,11 +5,11 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import settings.Lang;
 import streamlogic.RadioStation;
 
 public class InfoPanel extends JPanel {
 
+	private static final long serialVersionUID = 1L;
 	private JLabel name, rate, genre, format, status;
 
 	public InfoPanel() {
