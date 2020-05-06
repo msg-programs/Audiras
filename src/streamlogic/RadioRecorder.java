@@ -1,6 +1,8 @@
 package streamlogic;
+
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
@@ -51,7 +53,7 @@ public class RadioRecorder extends Thread {
 
 		if (!dir.exists()) {
 			if (!dir.mkdirs()) {
-				JOptionPane.showMessageDialog(null, Lang.get("inv_dir"));
+				JOptionPane.showMessageDialog(null,"Couldn't create the directory!","Error",JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}
 		}
@@ -114,7 +116,7 @@ public class RadioRecorder extends Thread {
 //			System.out.println("Trying to close outStream in line 112");
 			outStream.close();
 //			System.out.println("Success");
-		} catch (Exception e) {
+		} catch (IOException e) {
 			System.err.println("Error while writing in RRecorder for stream " + rs.name);
 			e.printStackTrace();
 			rs.recording = false;
@@ -224,7 +226,7 @@ public class RadioRecorder extends Thread {
 
 			if (!(creatorEnd >= 0) || !(creator >= 0)) {
 				if (!t.contains("-")) {
-					c = Lang.get("ukn_ctr");
+					c ="[Unknown]";
 				} else {
 					String parts[] = t.split("-");
 					c = parts[0].trim();

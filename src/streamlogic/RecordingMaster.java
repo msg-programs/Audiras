@@ -1,4 +1,5 @@
 package streamlogic;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -12,10 +13,9 @@ public class RecordingMaster {
 
 	public static void init() {
 
-		for (int i = 1; i <= Settings.getNumStreams(); i++) {
-
+		for (int i = 0; i < Settings.getNumStreams(); i++) {
 			String url = Settings.getStreamUrlById(i);
-			stations[i - 1] = new RadioStation(url, i);
+			stations[i] = new RadioStation(url, i);
 		}
 
 	}

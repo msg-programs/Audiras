@@ -1,4 +1,5 @@
 package settings;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,7 +52,7 @@ public class Settings {
 				pw.close();
 			} catch (Exception e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Error while creating autostart file!");
+				JOptionPane.showMessageDialog(null, "Error while creating autostart file!","Error",JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
@@ -116,13 +117,13 @@ public class Settings {
 		settings.put("language", file.getName().split(".txt")[0]);
 		Lang.init();
 
-		JOptionPane.showMessageDialog(null, Lang.get("frst_greed"));
+		JOptionPane.showMessageDialog(null,"Welcome, new Audiras user!");
 //		JOptionPane.showMessageDialog(null, Lang.get("rcrd_dir"));
 
 		// RECORDING DIR INIT ==================================
 
 		// STREAM LIST INIT
-		JOptionPane.showMessageDialog(null, Lang.get("slct_lst"));
+		JOptionPane.showMessageDialog(null, "Select stream list");
 
 		boolean c = true;
 
@@ -138,9 +139,9 @@ public class Settings {
 			}
 
 			if (file == null) {
-				int i = JOptionPane.showConfirmDialog(null, Lang.get("inv_dir"), "Error", JOptionPane.OK_CANCEL_OPTION);
+				int i = JOptionPane.showConfirmDialog(null, "Invalid directory!", "Error", JOptionPane.OK_CANCEL_OPTION);
 				if (i == 2) {
-					JOptionPane.showMessageDialog(null, Lang.get("stp_abort"));
+					JOptionPane.showMessageDialog(null, "Setup was aborted");
 					System.exit(0);
 				}
 			} else {
@@ -148,7 +149,7 @@ public class Settings {
 				if (file.canWrite() && file.canRead()) {
 					c = false;
 				} else {
-					JOptionPane.showMessageDialog(null, Lang.get("io_err"));
+					JOptionPane.showMessageDialog(null, "Can't read from / write to this directory");
 				}
 			}
 		} while (c);
@@ -158,37 +159,37 @@ public class Settings {
 					Paths.get(new File(System.getenv("APPDATA") + "/Audiras/" + file.getName()).toURI()),
 					StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(null, Lang.get("err_mov"));
+			JOptionPane.showMessageDialog(null, "Error while moving the file!"));
 			e1.printStackTrace();
 		}
 
 		// REC COND INIT ========================================
-		String[] choices = { Lang.get("num_per"), Lang.get("sze_per"), Lang.get("num_all"), Lang.get("sze_all") };
-		String input = (String) JOptionPane.showInputDialog(null, Lang.get("blck_cnd_chk"), null,
+		String[] choices = { "Number of songs / stream", "Size of all songs / stream", "Number of all songs recorded", "Size of all songs recorded" };
+		String input = (String) JOptionPane.showInputDialog(null,"Set stop condition", null,
 				JOptionPane.QUESTION_MESSAGE, null, choices, choices[0]);
 
 		if (input == null) {
-			JOptionPane.showMessageDialog(null, Lang.get("stp_abort"));
+			JOptionPane.showMessageDialog(null, "Setup was aborted");
 			System.exit(0);
 		}
 
 		int res = -1;
 
-		if (input.equals(Lang.get("num_per"))) {
+		if (input.equals("Number of songs / stream")) {
 			res = Settings.NUM_PER;
 
-		} else if (input.equals(Lang.get("sze_per"))) {
+		} else if (input.equals("Size of all songs / stream")) {
 			res = Settings.SIZE_PER;
 
-		} else if (input.equals(Lang.get("num_all"))) {
+		} else if (input.equals("Number of all songs recorded")) {
 			res = Settings.NUM_ALL;
 
-		} else if (input.equals(Lang.get("sze_all"))) {
+		} else if (input.equals("Size of all songs recorded" )) {
 			res = Settings.SIZE_ALL;
 		}
 
 		if (res == -1) {
-			JOptionPane.showMessageDialog(null, Lang.get("stp_abort"));
+			JOptionPane.showMessageDialog(null, "Setup was aborted");
 			System.err.println("err stt");
 			System.exit(0);
 		}
@@ -200,13 +201,13 @@ public class Settings {
 		do {
 
 			if (res % 2 == 1) {
-				in = (String) JOptionPane.showInputDialog(null, Lang.get("sze_stp"));
+				in = (String) JOptionPane.showInputDialog(null, "Size to stop");
 			} else if (res % 2 == 0) {
-				in = (String) JOptionPane.showInputDialog(null, Lang.get("num_stp"));
+				in = (String) JOptionPane.showInputDialog(null, "Number to stop");
 			}
 
 			if (in == null) {
-				JOptionPane.showMessageDialog(null, Lang.get("stp_abort"));
+				JOptionPane.showMessageDialog(null, "Setup was aborted");
 				System.err.println("err stt 2");
 				System.exit(0);
 			}
@@ -220,7 +221,7 @@ public class Settings {
 			}
 
 			if (in.equals("") || lmt == -1) {
-				JOptionPane.showMessageDialog(null, Lang.get("inv_num"));
+				JOptionPane.showMessageDialog(null,"Invalid number!");
 			}
 
 		} while (in.equals("") || lmt == -1);
@@ -228,7 +229,7 @@ public class Settings {
 		settings.put("block_cond", Integer.toString(res));
 		settings.put("block_max", Float.toString(lmt * 1000));
 
-		JOptionPane.showMessageDialog(null, Lang.get("stp_cmplt"));
+		JOptionPane.showMessageDialog(null, "Setup complete!");
 
 		Settings.save();
 	}
@@ -248,11 +249,11 @@ public class Settings {
 			int i = 0;
 			for (RadioStation rs : RecordingMaster.stations) {
 				if (rs != null) {
-					i++;
 					out.println("stream_" + i + "->" + rs.url);
+					i++;
 				}
 			}
-			out.println("num_streams->" + Integer.toString(i));
+			out.println("num_streams->" + i);
 			out.close();
 		} catch (Exception e) {
 			try {
@@ -338,7 +339,7 @@ public class Settings {
 		if (!settings.containsKey("block_max")) {
 			settings.put("block_max", "0");
 		}
-		float i = Float.valueOf(settings.get("block_max").replaceAll(",", "."));
+		float i = Float.valueOf(settings.get("block_max"));
 		return (int) i;
 	}
 
@@ -364,7 +365,7 @@ public class Settings {
 
 	public static boolean getShowWin() {
 		if (!settings.containsKey("shw_win")) {
-			settings.put("shw_win", "0");
+			settings.put("shw_win", "1");
 		}
 		return settings.get("shw_win").equals("1");
 	}

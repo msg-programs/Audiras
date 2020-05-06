@@ -1,7 +1,9 @@
 package settings;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class Lang {
@@ -15,19 +17,23 @@ public class Lang {
 			BufferedReader bfr = new BufferedReader(new FileReader(LANG));
 
 			while ((line = bfr.readLine()) != null) {
+				if (line.startsWith("//")) {
+					continue;
+				}
 				trans.put(line.split("=")[0], line.split("=")[1]);
 			}
 
 			bfr.close();
-		} catch (Exception e) {
-			System.err.println(line);
+		} catch (IOException e) {
+			System.err.println("Something went wrong while reading the language file:");
+			e.printStackTrace();
 		}
 
 	}
 
 	public static String get(String key) {
 		String r = trans.get(key);
-		if (!trans.containsKey(key))
+		if (r == null)
 			System.err.println("Can't find " + key + " in translation!");
 		return r;
 	}

@@ -1,4 +1,5 @@
 package streamlogic;
+
 import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
@@ -108,19 +109,19 @@ public class RadioStation {
 	public String getStatus() {
 
 		if (err) {
-			return Lang.get("conn_err");
+			return "Connection error";
 		}
 
 		if (lock) {
-			return Lang.get("lmt_hit");
+			return "Hit the limit";
 		}
 
 		if (recording) {
-			return Lang.get("rec_on");
+			return "Recording";
 		}
 
 		if (!recording) {
-			return Lang.get("rec_off");
+			return "Idle";
 		}
 
 		return "???";
@@ -129,11 +130,11 @@ public class RadioStation {
 	public String getStatusB() {
 
 		if (!recording || err || lock) {
-			return Lang.get("rec_tog_on");
+			return "Start recording";
 		}
 
 		if (recording) {
-			return Lang.get("rec_tog_off");
+			return "Stop recording";
 		}
 		return null;
 	}

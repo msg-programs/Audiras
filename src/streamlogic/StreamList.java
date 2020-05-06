@@ -1,7 +1,9 @@
 package streamlogic;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -12,99 +14,73 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import settings.Lang;
+import settings.Settings;
 
 public class StreamList {
 
 	public static ArrayList<RadioStation> stations = new ArrayList<>();
-	private static final File SRC = new File(System.getenv("APPDATA") + "/Audiras/streams.txt");
+	private static final File STREAMFILE = new File(Settings.THIS_DIR + "/data/streams.txt");
 
+	// load streams saved in file STREAMFILE
 	public static void init() {
 
-		if (!SRC.exists()) {
-			JOptionPane.showMessageDialog(null, Lang.get("srms_not_fnd"));
+		if (!STREAMFILE.exists()) {
+			JOptionPane.showMessageDialog(null, "Stream list file not found!","Error",JOptionPane.ERROR_MESSAGE);
+			// TODO throw exception
 		}
 
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(SRC));
+			BufferedReader br = new BufferedReader(new FileReader(STREAMFILE));
 			String line;
 
 			int i = 0;
 			boolean a = false;
 
 			while ((line = br.readLine()) != null) {
-				if (!line.equals("")) {
-					for (RadioStation rs : RecordingMaster.stations) {
-
-						if (rs != null) {
-//						System.out.println(rs.url);
-							if (rs.url.equals(line)) {
-								a = true;
-							}
-						}
-//					System.out.println(a);
-					}
-
-					if (!a) {
-						stations.add(new RadioStation(line, i));
-						i++;
-					}
-
-					a = false;
+				if (line.equals("")) {
+					continue;
 				}
+
+				// loop init'd radiostations, if current stream isn't there, add it to the list
+				for (RadioStation rs : RecordingMaster.stations) {
+					if (rs != null && rs.url.equals(line)) {
+						a = true;
+					}
+				}
+
+				if (!a) {
+					stations.add(new RadioStation(line, i));
+					i++;
+				}
+
+				a = false;
+
 			}
 
 			br.close();
 
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 	}
 
+	// test if the url given is a stream that can be recorded from
 	public static boolean test(String url) {
-//		System.out.println("3");
-		try {
-			URLConnection conn = new URL(url + ".xspf").openConnection();
-//			System.out.println("4");
-			InputStream is = conn.getInputStream();
-//			System.out.println("5");
-			int i;
-			byte[] b = new byte[4096];
-			is.readNBytes(b, 0, b.length);
-			String a = new String(b);
+		// TODO rewrite
 
-//			System.out.println(new String(b));
-
-			if (!a.contains("title") || !(a.length() > 5)) {
-				JOptionPane.showMessageDialog(null, Lang.get("no_mta"));
-				i = 1 / 0;
-			}
-
-			if (!a.contains("mpeg")) {
-				JOptionPane.showMessageDialog(null, Lang.get("not_supp"));
-				i = 1 / 0;
-			}
-
-//			System.out.println("10");
-
-		} catch (Exception e) {
-//			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, Lang.get("not_vld"));
-			return false;
-		}
-//		System.out.println("11");
-		return true;
+		return false;
 	}
 
+	// add inputted station to list of radiostations and the file STREAMFILE
 	public static RadioStation add(String s) {
 		try {
-			Files.write(SRC.toPath(), new String("\n" + s).getBytes(), StandardOpenOption.APPEND);
+			Files.write(STREAMFILE.toPath(), new String("\n" + s).getBytes(), StandardOpenOption.APPEND);
 			RadioStation rs = new RadioStation(s, stations.size());
 			stations.add(rs);
 			return rs;
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, Lang.get("err_add"));
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Error while adding stream!");
 			return null;
 		}
 	}
