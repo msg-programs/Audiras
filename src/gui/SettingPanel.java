@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import settings.Lang;
 import settings.Settings;
 
 public class SettingPanel extends JPanel implements ActionListener {
@@ -57,8 +56,8 @@ public class SettingPanel extends JPanel implements ActionListener {
 
 		block = new JTextField();
 		block.setText((mode.getSelectedIndex() % 2 == 1)
-				? String.valueOf(String.format("%.3f", (float) Settings.getBlockMax() / 1000f)).replace(".", ",")
-				: String.valueOf(String.format("%.0f", (float) Settings.getBlockMax() / 1000f)).replace(".", ","));
+				? String.format("%.3f",  Settings.getBlockMax())
+				: String.format("%.0f",  Settings.getBlockMax()));
 		block.setBounds(265, 75, 50, 20);
 		this.add(block);
 
@@ -88,11 +87,16 @@ public class SettingPanel extends JPanel implements ActionListener {
 
 		if (ae.getSource().equals(mode)) {
 			if (mode.getSelectedIndex() % 2 == 1) {
-				// block mode is size
-				gb.setVisible(true);
+				float size=0.5f;
+				try {
+					size = Float.parseFloat(block.getText());
+				}catch (NumberFormatException e) {
+					JOptionPane.showMessageDialog(null, "Invalid float!", "Error",JOptionPane.ERROR_MESSAGE);
+				}
 				
-				block.setText(
-						String.valueOf(String.format("%.3f", Float.valueOf(block.getText()))));
+				gb.setVisible(true);
+				block.setText(String.valueOf(size));
+				Settings.setBlockMax(size);
 			} else {
 				// block mode is # recordings
 				int num=1;
@@ -104,8 +108,9 @@ public class SettingPanel extends JPanel implements ActionListener {
 				
 				gb.setVisible(false);
 				block.setText(String.valueOf(num));
-				Settings.setBlockMax(String.valueOf(num));
+				Settings.setBlockMax((float)num);
 			}
+			// baba is you
 		}
 		
 	}
