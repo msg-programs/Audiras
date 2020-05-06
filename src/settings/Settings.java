@@ -159,7 +159,7 @@ public class Settings {
 					Paths.get(new File(System.getenv("APPDATA") + "/Audiras/" + file.getName()).toURI()),
 					StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e1) {
-			JOptionPane.showMessageDialog(null, "Error while moving the file!"));
+			JOptionPane.showMessageDialog(null, "Error while moving the file!");
 			e1.printStackTrace();
 		}
 
@@ -335,20 +335,20 @@ public class Settings {
 		return i;
 	}
 
-	public static int getBlockMax() {
+	public static float getBlockMax() {
 		if (!settings.containsKey("block_max")) {
-			settings.put("block_max", "0");
+			settings.put("block_max", "1");
 		}
-		float i = Float.valueOf(settings.get("block_max"));
-		return (int) i;
+		float f = Float.valueOf(settings.get("block_max"));
+		return  f;
 	}
 
 	public static void setBlockMode(int selectedIndex) {
 		settings.put("block_cond", String.valueOf(selectedIndex));
 	}
 
-	public static void setBlockMax(String text) {
-		settings.put("block_max", String.valueOf(Float.valueOf(text.replaceAll(",", ".")) * 1000f));
+	public static void setBlockMax(float num) {
+		settings.put("block_max", String.valueOf(num));
 	}
 
 	public static void setBootRec(boolean selected) {
