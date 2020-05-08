@@ -7,15 +7,17 @@ import settings.Settings;
 
 public class RecordingMaster {
 
-	public static RadioStation[] stations = new RadioStation[Settings.getMaxStreams()];
+	public static ArrayList<RadioStation> stations = new ArrayList<>();
 
 	public static ArrayList<Recording> files = new ArrayList<>();
 
 	public static void init() {
 
 		for (int i = 0; i < Settings.getNumStreams(); i++) {
-			String url = Settings.getStreamUrlById(i);
-			stations[i] = new RadioStation(url, i);
+			int id = Settings.getStreamIDByIdx(i);
+			if (id != -1) {				
+				stations.add(StationList.getStation(id));
+			}
 		}
 
 	}
@@ -149,6 +151,20 @@ public class RecordingMaster {
 		}
 
 		return full;
+	}
+
+	public static void addStation(RadioStation rs) {
+		stations.add(rs);
+		
+	}
+
+	public static RadioStation getStation(int idx) {
+		return stations.get(idx);
+	}
+
+	public static void remove(RadioStation rs) {
+		stations.remove(rs);
+		
 	}
 
 }
