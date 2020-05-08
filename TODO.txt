@@ -1,0 +1,9 @@
+TODO
+
+SettingPanel:	Add target recording dir chooser
+StationList: 	Handle case when streamfile not found
+				write addStream func
+Lang: 			add default settings	
+Recording/ListPanel:
+				rewrite list back and forth
+
