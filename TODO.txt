@@ -1,9 +1,15 @@
-TODO
+== hi prio TOOD
+file saving
+metadata crawler
+song splitting
+etc...
 
+== low prio TODO
 SettingPanel:	Add target recording dir chooser
-StationList: 	Handle case when streamfile not found
-				write addStream func
+StationList: 	write addStream func
 Lang: 			add default settings	
-Recording/ListPanel:
-				rewrite list back and forth
+
+== next update todo
+ListPanel:		add search bar
+
 
