@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,16 +18,13 @@ import javax.swing.table.DefaultTableModel;
 import settings.Lang;
 import streamlogic.RadioStation;
 import streamlogic.RecordingMaster;
-import streamlogic.StreamList;
 
 public class RecordPanel extends JPanel implements ActionListener, ListSelectionListener {
 
 	private JTable table;
 	private DefaultTableModel model;
-	private JButton  masOn, masOff,recToggle, delete;
+	private JButton masOn, masOff, recToggle, delete;
 	private InfoPanel dispR;
-	
-	private int stationID;
 
 	public RecordPanel() {
 		this.setLayout(null);
@@ -46,7 +42,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 		// ---TABLE SETUP START
 		model = new DefaultTableModel(0, 1);
 
-		populateStreamList();
+		populateTable();
 
 		table = new JTable() {
 			private static final long serialVersionUID = 1L;
@@ -61,7 +57,6 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 		table.setColumnSelectionAllowed(false);
 		table.setRowSelectionAllowed(false);
 		table.getSelectionModel().addListSelectionListener(this);
-		table.setRowSelectionInterval(0, 0);
 
 		JScrollPane pane = new JScrollPane(table);
 		pane.setBounds(10, 22, 140, 131);
@@ -97,7 +92,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 		dispR.add(recToggle);
 		recToggle.addActionListener(this);
 
-		delete = new JButton("Reomve stream");
+		delete = new JButton("Remove stream");
 		delete.setBounds(15, 185, 150, 20);
 		delete.setEnabled(false);
 		dispR.add(delete);
@@ -109,44 +104,45 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 
 	}
 
-	private void populateStreamList() {
-		
-		for (int i = 0; i<model.getRowCount(); i++) {
-			model.removeRow(i);
+	void populateTable() {
+
+		if (model.getRowCount() > 0) {
+			for (int i = model.getRowCount() - 1; i >= 0; i--) {
+				model.removeRow(i);
+			}
 		}
-		
+
 		String[] s = new String[1];
 		for (RadioStation rs : RecordingMaster.stations) {
-			if (rs != null) {
-				s[0] = rs.name;
-			} else {
-				s[0] = "[Empty]";
-			}
+			s[0] = rs.name;
 			model.addRow(s);
 		}
 	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-//		stationID = table.getSelectedRow();
-//
-//		RadioStation rs = RecordingMaster.stations[stationID];
-//
-//		recToggle.setEnabled(true);
-//
-//		if (!(rs == null)) {
-//			dispR.updateText(rs);
-//			recToggle.setText(rs.getStatusB());
-//			delete.setEnabled(true);
-//
-//			if (rs.lock) {
-//				recToggle.setEnabled(false);
-//			}
-//		} else {
-//			dispR.updateText(null);
-//			recToggle.setEnabled(false);
-//			delete.setEnabled(false);
-//		}
+
+		int rowNr = table.getSelectedRow();
+
+		if (rowNr < 0) {
+			return;
+		}
+		RadioStation rs = RecordingMaster.getStation(rowNr);
+
+		recToggle.setEnabled(true);
+
+		dispR.updateText(rs);
+		if (rs != null) {
+			recToggle.setText(rs.getStatusB());
+			delete.setEnabled(true);
+
+			if (rs.lock) {
+				recToggle.setEnabled(false);
+			}
+		} else {
+			recToggle.setEnabled(false);
+			delete.setEnabled(false);
+		}
 
 	}
 
@@ -164,49 +160,30 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 			RecordingMaster.toggle(table.getSelectedRow());
 		}
 
+		int rowNr = table.getSelectedRow();
 		if (ae.getSource().equals(delete)) {
 
-			int i = JOptionPane.showConfirmDialog(null, "Are you sure?", null, JOptionPane.YES_NO_OPTION,
-					JOptionPane.QUESTION_MESSAGE);
+			RadioStation rs = RecordingMaster.getStation(rowNr);
+			rs.stopRec();
+			RecordingMaster.remove(rs);
 
-			if (i == JOptionPane.YES_OPTION) {
-				RadioStation rs = RecordingMaster.stations[table.getSelectedRow()];
-				rs.stopRec();
-
-//				model2.removeRow(0);
-//				add.setEnabled(true);
-//
-//				StreamList.stations.add(rs);
-//				String[] s = { rs.name };
-//				model2.addRow(s);
-
-				rs = null;
-				RecordingMaster.stations[table.getSelectedRow()] = null;
-
-				model.setValueAt("[Empty]", table.getSelectedRow(), 0);
-
-			}
+			model.removeRow(rowNr);
 
 			return;
 		}
 
-		RadioStation rs = RecordingMaster.stations[table.getSelectedRow()];
+		RadioStation rs = RecordingMaster.getStation(rowNr);
 
+		dispR.updateText(rs);
 		if (rs != null) {
-//			dispR.setStatus(rs.getStatus());
-//			recToggle.setText(rs.getStatusB());
-//			if (rs.err) {
-//				recToggle.setText(Lang.get("rec_tog_on"));
-//				recToggle.setEnabled(true);
-//				dispR.setStatus(Lang.get("rec_err"));
-//			}
-
+			recToggle.setText(rs.getStatusB());
+			if (rs.err) {
+				recToggle.setText(Lang.get("rec_tog_on"));
+				recToggle.setEnabled(true);
+			}
 		} else {
-			dispR.updateText(rs);
 			recToggle.setEnabled(false);
 		}
 		return;
-
 	}
-
 }
