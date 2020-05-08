@@ -23,12 +23,12 @@ public class RecordingMaster {
 	}
 
 	public static void toggle(int i) {
-		RadioStation rs = stations[i];
+		RadioStation rs = stations.get(i);
 
 		if (rs.recording) {
-			stations[i].stopRec();
+			rs.stopRec();
 		} else {
-			stations[i].startRec();
+			rs.startRec();
 		}
 	}
 

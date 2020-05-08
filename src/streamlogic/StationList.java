@@ -25,8 +25,8 @@ public class StationList {
 	public static void init() {
 
 		if (!STREAMFILE.exists()) {
-			JOptionPane.showMessageDialog(null, "Stream list file not found!", "Error", JOptionPane.ERROR_MESSAGE);
-			// TODO throw exception
+			JOptionPane.showMessageDialog(null, "Stream list file not found!\nPlease download the streamfile and try again\nProgram will exit.", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(0); // could open without anything, but why? stream recorder is useless w/o streams...
 		}
 
 		try {
