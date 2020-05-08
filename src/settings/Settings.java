@@ -86,7 +86,7 @@ public class Settings {
 			int i = 0;
 			for (RadioStation rs : RecordingMaster.stations) {
 				if (rs != null) {
-					out.println("stream_" + i + "->" + rs.id);
+					out.println("station_" + i + "->" + rs.id);
 					i++;
 				}
 			}
@@ -202,7 +202,7 @@ public class Settings {
 	}
 
 	public static int getStreamIDByIdx(int i) {
-		String res = settings.get("stations_" + i);
+		String res = settings.get("station_" + i);
 		if (res == null) {
 			return -1;
 		} else {
