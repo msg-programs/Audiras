@@ -42,7 +42,6 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 		// ---TABLE SETUP START
 		model = new DefaultTableModel(0, 1);
 
-		populateTable();
 
 		table = new JTable() {
 			private static final long serialVersionUID = 1L;
@@ -101,6 +100,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 		// --RIGHT SETUP END
 
 		this.add(dispR);
+		populateTable();
 
 	}
 
@@ -114,7 +114,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 
 		String[] s = new String[1];
 		for (RadioStation rs : RecordingMaster.stations) {
-			s[0] = rs.name;
+			s[0] = rs.meta.name;
 			model.addRow(s);
 		}
 	}

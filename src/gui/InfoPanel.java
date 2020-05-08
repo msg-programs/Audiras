@@ -62,10 +62,10 @@ public class InfoPanel extends JPanel {
 	
 	public void updateText(RadioStation rs) {
 		if (rs != null) {
-			format.setText(rs.format);
-			name.setText(rs.name);
-			rate.setText(rs.bitrate);
-			genre.setText(rs.genre);
+			format.setText(rs.meta.format);
+			name.setText(rs.meta.name);
+			rate.setText(rs.meta.bitrate);
+			genre.setText(rs.meta.genre);
 			status.setText(rs.getStatus());
 		} else {
 			format.setText("");

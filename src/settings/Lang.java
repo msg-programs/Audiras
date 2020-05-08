@@ -8,11 +8,14 @@ import java.util.HashMap;
 
 public class Lang {
 
-	private static final File LANG = new File(Settings.THIS_DIR + "/data/" + Settings.getLang() + ".txt");
+	private static final File LANG = new File(Settings.THIS_DIR + "/data/lang.txt");
 	private static HashMap<String, String> trans = new HashMap<>();
 
 	public static void init() {
 		String line = null;
+		
+		addDefaultStrings();
+		
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader(LANG));
 
@@ -31,10 +34,18 @@ public class Lang {
 
 	}
 
+
 	public static String get(String key) {
 		String r = trans.get(key);
-		if (r == null)
-			System.err.println("Can't find " + key + " in translation!");
+		if (r == null) {
+			System.err.println("Can't find " + key + " in language string pool!");
+			return "MISSING";
+		}
 		return r;
+	}
+	
+	private static void addDefaultStrings() {
+		
+		
 	}
 }

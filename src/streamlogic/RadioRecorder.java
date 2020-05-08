@@ -44,10 +44,10 @@ public class RadioRecorder extends Thread {
 	public RadioRecorder(RadioStation rs1) {
 		this.rs = rs1;
 
-		String streamURL = rs.url;
-		infoUrl = rs.url + ".xspf";
+		String streamURL = rs.meta.url;
+		infoUrl = rs.meta.url + ".xspf";
 
-		dir = new File(Settings.getStreamDir() + "\\" + rs.name);
+		dir = new File(Settings.getStreamDir() + "\\" + rs.meta.name);
 
 		System.out.println(dir.getAbsolutePath());
 
@@ -117,7 +117,7 @@ public class RadioRecorder extends Thread {
 			outStream.close();
 //			System.out.println("Success");
 		} catch (IOException e) {
-			System.err.println("Error while writing in RRecorder for stream " + rs.name);
+			System.err.println("Error while writing in RRecorder for stream " + rs.meta.name);
 			e.printStackTrace();
 			rs.recording = false;
 		}

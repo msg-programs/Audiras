@@ -95,7 +95,7 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 		String[] s = new String[1];
 
 		for (RadioStation rs : StationList.stations) {
-			s[0] = rs.name;
+			s[0] = rs.meta.name;
 			model.addRow(s);
 		}
 
