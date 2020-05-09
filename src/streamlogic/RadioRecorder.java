@@ -13,71 +13,58 @@ import javax.swing.JOptionPane;
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.Mp3File;
 
-import settings.Lang;
 import settings.Settings;
 
 public class RadioRecorder extends Thread {
 
-	private InputStream music, data;
-	private File tmpFile, dir;
+	private InputStream music;
+	private File tmpFile;
 
 	private OutputStream outStream;
 
-	private static final int BUF_SZE = 1 * 1024;
+	// c = creator, t = title !!
+	private String prevC;
+	private String prevT;
 
-	private byte[] bufferPre = new byte[BUF_SZE];
-//	private byte[] bufferWrite = new byte[BUF_SZE];
-//	private byte[] bufferNew = new byte[BUF_SZE];
-
-	private URLConnection toData;
-	private String prevC = "";
-	private String prevT = "";
-
-	private String c = "";
-	private String t = "";
-	private String infoUrl;
+	private String currC;
+	private String currT;
 
 	private RadioStation rs;
 
-	private boolean empty = true;
+	private int blocksize = 0;
+	
+	private int idxTrailing = 0;
+	private int idxLeading = 1;
+	byte[][] mus;
 
-	public RadioRecorder(RadioStation rs1) {
-		this.rs = rs1;
+	private boolean first = false;
 
-		String streamURL = rs.meta.url;
-		infoUrl = rs.meta.url + ".xspf";
+	public RadioRecorder(RadioStation rs) {
+		this.rs = rs;
+		this.blocksize = rs.meta.metaInt;
+		this.first = false; // better do it twice
+		mus = new byte[2][blocksize];
 
-		dir = new File(Settings.getStreamDir() + "\\" + rs.meta.name);
-
-		System.out.println(dir.getAbsolutePath());
-
-		if (!dir.exists()) {
-			if (!dir.mkdirs()) {
-				JOptionPane.showMessageDialog(null,"Couldn't create the directory!","Error",JOptionPane.ERROR_MESSAGE);
+		if (!rs.streamdir.exists()) {
+			if (!rs.streamdir.mkdirs()) {
+				JOptionPane.showMessageDialog(null, "Couldn't create the directory!", "Error",
+						JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}
 		}
 
-		tmpFile = new File(dir.getAbsolutePath() + "\\tmp.mp3");
+		tmpFile = new File(rs.streamdir.getAbsolutePath() + "\\tmp.mp3");
 
 		try {
-			URLConnection toMusic = new URL(streamURL).openConnection();
+			URLConnection toMusic = new URL(rs.meta.url).openConnection();
+			toMusic.setRequestProperty("Icy-MetaData", "1");
+			toMusic.setRequestProperty("Accept", null);
 			toMusic.connect();
 
-			toData = new URL(infoUrl).openConnection();
-			toData.connect();
-
 			music = toMusic.getInputStream();
-			data = toData.getInputStream();
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
-
-		for (int i = 0; i < BUF_SZE; i++) {
-			bufferPre[i] = 0;
-//			bufferWrite[i] = 0;
-//			bufferNew[i] = 0;
 		}
 
 		this.start();
@@ -85,61 +72,73 @@ public class RadioRecorder extends Thread {
 
 	@Override
 	public void run() {
-		if (RecordingMaster.checkFull(rs.id)) {
+		if (rs.isFull()) {
 			rs.lock = true;
 			return;
 		}
 
 		try {
-			int bytesRead;
 
 			outStream = new FileOutputStream(tmpFile);
 
-			while ((bytesRead = music.read(bufferPre)) != -1 && rs.recording) {
-				outStream.write(bufferPre, 0, BUF_SZE);
-//				long now = System.nanoTime();
-//				System.arraycopy(bufferWrite, 0, bufferPre, 0, BUF_SZE);
-//				System.arraycopy(bufferNew, 0, bufferWrite, 0, BUF_SZE);
-//				System.out.println(System.nanoTime()-now);
-//				System.exit(0);
+			mus[idxLeading] = music.readNBytes(blocksize);
+			incIdxs();
+
+			int len = music.read();
+			byte[] dat = music.readNBytes(len * 4);
+
+			updateMeta(dat);
+
+			while (rs.recording) {
+				mus[idxLeading] = music.readNBytes(blocksize);
+				len = music.read();
+				dat = music.readNBytes(len * 4);
+				updateMeta(dat);
+
+				outStream.write(mus[idxTrailing]);
+
+				incIdxs();
 
 				if (check()) {
 					save();
 				}
 			}
-//			System.out.println("Trying to close music in line 106");
 			music.close();
-//			System.out.println("Success");
-//			System.out.println("Trying to close data in line 110");
-			data.close();
-//			System.out.println("Success");
-//			System.out.println("Trying to close outStream in line 112");
 			outStream.close();
-//			System.out.println("Success");
 		} catch (IOException e) {
-			System.err.println("Error while writing in RRecorder for stream " + rs.meta.name);
+			System.err.println("Error while writing in Recorder for stream " + rs.meta.name);
 			e.printStackTrace();
 			rs.recording = false;
 		}
 	}
 
+	private void updateMeta(byte[] dat) {
+		// oof this'll _byte_ my ass for sure
+		// String(dat) is a map with entries in key=value seperated by ;
+		// split(;)[0] for first entry (track data),
+		// split(=) for value of entry,
+		// split(-) for author - name
+
+		String[] str = new String(dat).trim().split(";")[0].split("=")[1].split("-");
+		prevC = currC;
+		prevT = currT;
+		currC = str[0].trim();
+		currT = str[1].trim();
+	}
+	
+	private void incIdxs() {
+		this.idxLeading++;
+		this.idxLeading %=2;
+		this.idxTrailing = Math.abs(idxLeading-1);
+	}
+
 	private void save() {
 
 		try {
-
-			if (empty) {
-//				System.arraycopy(bufferWrite, 0, bufferPre, 0, BUF_SZE);
-				empty = false;
-			}
-
-//			outStream = new FileOutputStream(tmpFile);
-//			outStream.write(bufferNew);
-
-			if (prevC.equals("") || prevT.equals("") || rs.first) {
-				prevC = c;
-				prevT = t;
-//				outStream.close();
-				rs.first = false;
+			if (first) {
+				prevC = currC;
+				prevT = currT;
+				first = false;
 				return;
 			}
 
@@ -150,48 +149,24 @@ public class RadioRecorder extends Thread {
 			tag.setArtist(prevC);
 			tag.setTitle(prevT);
 
-			if (RecordingMaster.checkFull(rs.id)) {
+			if (rs.isFull()) {
 				System.out.println("Check failed");
 				rs.lock = true;
 				rs.stopRec();
 				return;
 			} else {
-				RecordingMaster.addRecording(rs.id,
-						new File(dir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3"));
+				outStream.write(mus[idxLeading]);
+				file.save(rs.streamdir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3");
+				rs.records.add(new File(rs.streamdir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3"));
 
-				System.out.print("Saving: ");
-				System.out.println(prevC + " - " + prevT + ".mp3");
-
-				if (prevC.contains("\\")) {
-					String[] parts = prevC.split("\\");
-					prevC = parts[0] + parts[1];
-				}
-
-				if (prevC.contains("/")) {
-					String[] parts = prevC.split("/");
-					prevC = parts[0] + parts[1];
-				}
-
-				if (prevT.contains("\\")) {
-					String[] parts = prevT.split("\\");
-					prevT = parts[0] + parts[1];
-				}
-
-				if (prevT.contains("/")) {
-					String[] parts = prevT.split("/");
-					prevT = parts[0] + parts[1];
-				}
-
-				file.save(dir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3");
+				System.out.print("Saving: " + prevC + " - " + prevT + ".mp3");
 			}
-
-			prevC = c;
-			prevT = t;
-//			System.out.println("Trying to close outStream in line 162");
+			
 			outStream.close();
-//			System.out.println("Success");
+			
 			outStream = new FileOutputStream(tmpFile);
-			outStream.write(bufferPre);
+			outStream.write(mus[idxTrailing]);
+			outStream.write(mus[idxLeading]);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -200,56 +175,14 @@ public class RadioRecorder extends Thread {
 	}
 
 	private boolean check() {
-		try {
-			toData = new URL(infoUrl).openConnection();
-			toData.connect();
-			data = null;
-			data = toData.getInputStream();
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			c = "";
-			t = "";
-			rs.recording = false;
+		if (currC == null || currT == null) {
+			System.err.println("Something went _horribly_ wrong while fetching metadata");
+			this.interrupt();
+			rs.lock = true;
+			rs.err = true;
 		}
 
-		try {
-			String info = new String(data.readAllBytes());
-
-			int creator = info.indexOf("<creator>") + 9;
-			int creatorEnd = info.indexOf("</creator>");
-
-			int title = info.indexOf("<title>") + 7;
-			int titleEnd = info.indexOf("</title>");
-
-			t = info.substring(title, titleEnd).trim();
-
-			if (!(creatorEnd >= 0) || !(creator >= 0)) {
-				if (!t.contains("-")) {
-					c ="[Unknown]";
-				} else {
-					String parts[] = t.split("-");
-					c = parts[0].trim();
-					t = parts[1].trim();
-				}
-			} else {
-
-				c = info.substring(creator, creatorEnd).trim();
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			c = "";
-			t = "";
-		}
-
-		if (prevC.equals("") || prevT.equals("")) {
-			prevC = c;
-			prevT = t;
-			return false;
-		}
-
-		if (!c.equals(prevC) && !t.equals(prevT)) {
+		if (!currC.equals(prevC) && !currT.equals(prevT)) {
 			System.out.println("New song started!");
 			return true;
 		}
