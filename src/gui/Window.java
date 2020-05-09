@@ -1,15 +1,18 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import main.RadioMain;
+import settings.Settings;
 
 public class Window extends JFrame implements ChangeListener {
 
@@ -25,6 +28,8 @@ public class Window extends JFrame implements ChangeListener {
 
 	public Window() {
 		super("Audiras");
+		ImageIcon icon = new ImageIcon(Settings.ICO.getAbsolutePath());
+		this.setIconImage(icon.getImage());
 
 		this.setMaximumSize(DIM);
 		this.setMinimumSize(DIM);
