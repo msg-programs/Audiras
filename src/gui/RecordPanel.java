@@ -133,7 +133,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 
 		dispR.updateText(rs);
 		if (rs != null) {
-			recToggle.setText(rs.getStatusB());
+			recToggle.setText(rs.getButtonStatus());
 			delete.setEnabled(true);
 
 			if (rs.lock) {
@@ -176,7 +176,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 
 		dispR.updateText(rs);
 		if (rs != null) {
-			recToggle.setText(rs.getStatusB());
+			recToggle.setText(rs.getButtonStatus());
 			if (rs.err) {
 				recToggle.setText(Lang.get("rec_tog_on"));
 				recToggle.setEnabled(true);
