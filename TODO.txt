@@ -1,13 +1,12 @@
 == hi prio TOOD
-file saving
-metadata crawler
-song splitting
-etc...
 
 == low prio TODO
 SettingPanel:	Add target recording dir chooser
-StationList: 	write addStream func
+				recalc blocking on setting change	
+StationList: 	write addStream validation func
 Lang: 			add default settings	
+RadioMain: 		trayicon image not showing
+RecordingMaster:ask if recording should be deleted, warn bcs size not monitored anymore
 
 == next update todo
 ListPanel:		add search bar
