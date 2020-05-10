@@ -23,11 +23,11 @@ public class BufferQueue {
 	}
 
 	public void push(byte[] bytes) {
-//		System.out.println("Wrinting to buffer " + inIdx);
 		System.arraycopy(bytes, 0, buffers[inIdx], 0, size);
 	}
 
 	public void pushMeta(byte[] bytes) {
+		System.out.println("Pushing metadata: \"" + new String(bytes)+"\"");
 		System.arraycopy(bytes, 0, meta[inIdx], 0, bytes.length);
 	}
 
@@ -45,13 +45,18 @@ public class BufferQueue {
 	}
 
 	public byte[] getMeta(int what) {
+		System.out.println("Metastack is (RMW): \n\t" + new String(meta[inIdx]) + ", \n\t"+ new String(meta[bufIdx]) + ", \n\t"+ new String(meta[outIdx])+ ",");
+		
 		if (what == READ) {
+			System.out.println("getting READ");
 			return meta[inIdx];
 		}
 		if (what == MID) {
+			System.out.println("getting MID");
 			return meta[bufIdx];
 		}
 		if (what == WRITE) {
+			System.out.println("getting WRITE");
 			return meta[outIdx];
 		}
 		return null;

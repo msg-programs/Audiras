@@ -30,16 +30,6 @@ public class RadioMain {
 
 	public static void main(String[] args) {
 
-//try {
-//	test();
-//} catch (MalformedURLException e) {
-//	// TODO Auto-generated catch block
-//	e.printStackTrace();
-//} catch (IOException e) {
-//	// TODO Auto-generated catch block
-//	e.printStackTrace();
-//}
-
 		Settings.init();
 		System.out.println("s init");
 		Lang.init();
