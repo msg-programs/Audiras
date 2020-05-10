@@ -3,6 +3,7 @@ package streamlogic;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
 import settings.Settings;
@@ -65,6 +66,9 @@ public class RadioStation {
 			size /= 1000l; // mb
 			size /= 1000l; // gb
 			return size;
+		} catch (NoSuchFileException e) {
+			return 0;
+			
 		} catch (IOException e) {
 			System.err.println("Something went wrong while trying to calculate the dir size");
 			e.printStackTrace();
