@@ -9,11 +9,11 @@ import java.util.Map;
 
 public class StreamMeta {
 
-	public String name = "";
-	public String genre = "";
-	public String bitrate = "";
-	public String url = "";
-	public String format = "";
+	public String name = "[Error]";
+	public String genre = "???";
+	public String bitrate = "???";
+	public String url = "???";
+	public String format = "???";
 	public int metaInt = -1;
 
 	public String error = null;
@@ -28,6 +28,8 @@ public class StreamMeta {
 			URLConnection conn = new URL(url).openConnection();
 			conn.setRequestProperty("Icy-MetaData", "1");
 			conn.setRequestProperty("Connection", "close");
+			conn.setReadTimeout(1000);
+			conn.setConnectTimeout(1000);
 
 			res = conn.getHeaderFields();
 
@@ -36,23 +38,31 @@ public class StreamMeta {
 		} catch (IOException e) {
 			System.err.println(url + " doesn't seem to be valid or timed out!");
 			error = "Connection error!";
+			return;
 		}
-		
+
 		// god dammit
 		try {
-		if (res.get("Content-Type") == null) {
-			format = res.get("content-type").get(0);
-		} else {
-			format = res.get("Content-Type").get(0);
+			if (res.get("Content-Type") == null) {
+				format = res.get("content-type").get(0);
+			} else {
+				format = res.get("Content-Type").get(0);
+			}
+
+			if (!format.equals("audio/mpeg")) {
+				error = "Format not (yet) supported!";
+				return;
+			}
+
+			name = res.get("icy-name").get(0);
+			genre = res.get("icy-genre").get(0);
+			bitrate = res.get("icy-br").get(0);
+
+		} catch (IndexOutOfBoundsException e) {
+			System.err.println("Error while parsing metadata!");
+			error = "Invalid metadata!";
 		}
 
-		if (!format.equals("audio/mpeg")) {
-			error = "Format not (yet) supported!";
-		}
-
-		name = res.get("icy-name").get(0);
-		genre = res.get("icy-genre").get(0);
-		bitrate = res.get("icy-br").get(0);
 		try {
 			metaInt = Integer.parseInt(res.get("icy-metaint").get(0));
 		} catch (NumberFormatException e) {
@@ -64,10 +74,6 @@ public class StreamMeta {
 //		System.out.println("genre: " + genre);
 //		System.out.println("bitrate: " + bitrate);
 //		System.out.println("metaint: " + metaInt);
-		} catch (Exception e) {
-			System.err.println("Error while parsing metadata!");
-			error = "Invalid metadata!";
-		}
 	}
 
 }
