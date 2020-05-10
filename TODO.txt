@@ -1,8 +1,15 @@
 == hi prio TOOD
+RadioStation: 	dont restart already running recorders on master on
+StationList: 	dont allow error'd streams to be added
+SettingsPanel:	fix labels
+Lang:			re-add lang
+RadioRecorder:	re-join if split-char like "-" in title
 
 == low prio TODO
 SettingPanel:	Add target recording dir chooser
-				recalc blocking on setting change	
+				recalc blocking on setting change
+				recalc blocking button	
+Settings:		rewrite autostart
 StationList: 	write addStream validation func
 Lang: 			add default settings	
 RadioMain: 		trayicon image not showing
