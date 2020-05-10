@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -12,8 +13,6 @@ import javax.swing.JOptionPane;
 
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.Mp3File;
-
-import settings.Settings;
 
 public class RadioRecorder extends Thread {
 
@@ -32,22 +31,20 @@ public class RadioRecorder extends Thread {
 	private RadioStation rs;
 
 	private int blocksize = 0;
-	
-	private int idxTrailing = 0;
-	private int idxLeading = 1;
-	byte[][] mus;
 
-	private boolean first = false;
+	private BufferQueue bufferQ;
+
+	private boolean first = true;
 
 	public RadioRecorder(RadioStation rs) {
 		this.rs = rs;
 		this.blocksize = rs.meta.metaInt;
-		this.first = false; // better do it twice
-		mus = new byte[2][blocksize];
+		this.first = true;
+		bufferQ = new BufferQueue(blocksize);
 
 		if (!rs.streamdir.exists()) {
 			if (!rs.streamdir.mkdirs()) {
-				JOptionPane.showMessageDialog(null, "Couldn't create the directory!", "Error",
+				JOptionPane.showMessageDialog(null, "Couldn't create the directory " + rs.streamdir + "!", "Error",
 						JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}
@@ -58,6 +55,7 @@ public class RadioRecorder extends Thread {
 		try {
 			URLConnection toMusic = new URL(rs.meta.url).openConnection();
 			toMusic.setRequestProperty("Icy-MetaData", "1");
+			toMusic.setRequestProperty("Connection", "close");
 			toMusic.setRequestProperty("Accept", null);
 			toMusic.connect();
 
@@ -80,24 +78,22 @@ public class RadioRecorder extends Thread {
 		try {
 
 			outStream = new FileOutputStream(tmpFile);
-
-			mus[idxLeading] = music.readNBytes(blocksize);
-			incIdxs();
-
-			int len = music.read();
-			byte[] dat = music.readNBytes(len * 4);
-
-			updateMeta(dat);
+			bufferQ.push(music.readNBytes(blocksize));
+			bufferQ.pushMeta(readMeta());
+			bufferQ.incIdxs();
+			updateMeta(bufferQ.getMeta(BufferQueue.MID));
+			bufferQ.push(music.readNBytes(blocksize));
+			bufferQ.pushMeta(readMeta());
+			bufferQ.incIdxs();
+			updateMeta(bufferQ.getMeta(BufferQueue.MID));
 
 			while (rs.recording) {
-				mus[idxLeading] = music.readNBytes(blocksize);
-				len = music.read();
-				dat = music.readNBytes(len * 4);
-				updateMeta(dat);
+				bufferQ.push(music.readNBytes(blocksize));
+				bufferQ.pushMeta(readMeta());
+				bufferQ.incIdxs();
+				updateMeta(bufferQ.getMeta(BufferQueue.MID));
 
-				outStream.write(mus[idxTrailing]);
-
-				incIdxs();
+				outStream.write(bufferQ.get(BufferQueue.WRITE));
 
 				if (check()) {
 					save();
@@ -112,61 +108,84 @@ public class RadioRecorder extends Thread {
 		}
 	}
 
-	private void updateMeta(byte[] dat) {
-		// oof this'll _byte_ my ass for sure
-		// String(dat) is a map with entries in key=value seperated by ;
-		// split(;)[0] for first entry (track data),
-		// split(=) for value of entry,
-		// split(-) for author - name
+	private byte[] readMeta() throws IOException {
+		int len = music.read();
+		return music.readNBytes(len * 16);
+	}
 
-		String[] str = new String(dat).trim().split(";")[0].split("=")[1].split("-");
+	private void updateMeta(byte[] dat) {
+
+		String str = "";
+		try {
+			str = new String(dat, "UTF-8").trim();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (str.length() == 0) {
+			prevC = currC;
+			prevT = currT;
+			return;
+		}
+
+		String entry1 = str.split(";")[0];
+		String value = entry1.split("=")[1];
+		String[] info = value.split("-");
 		prevC = currC;
 		prevT = currT;
-		currC = str[0].trim();
-		currT = str[1].trim();
-	}
-	
-	private void incIdxs() {
-		this.idxLeading++;
-		this.idxLeading %=2;
-		this.idxTrailing = Math.abs(idxLeading-1);
+		currC = info[0].trim().replace("'", "");
+		currT = info[1].trim().replace("'", "");
 	}
 
 	private void save() {
 
 		try {
+			prevC = currC;
+			prevT = currT;
 			if (first) {
-				prevC = currC;
-				prevT = currT;
 				first = false;
-				return;
-			}
-
-			ID3v1Tag tag = new ID3v1Tag();
-			Mp3File file = new Mp3File(tmpFile);
-
-			file.setId3v1Tag(tag);
-			tag.setArtist(prevC);
-			tag.setTitle(prevT);
-
-			if (rs.isFull()) {
-				System.out.println("Check failed");
-				rs.lock = true;
-				rs.stopRec();
-				return;
+				System.out.println("First song detected, ignoring...");
 			} else {
-				outStream.write(mus[idxLeading]);
-				file.save(rs.streamdir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3");
-				rs.records.add(new File(rs.streamdir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3"));
 
-				System.out.print("Saving: " + prevC + " - " + prevT + ".mp3");
+				if (rs.isFull()) {
+					System.out.println("Recorder for " + rs.meta.name + " is full!");
+					rs.lock = true;
+					rs.stopRec();
+					return;
+				} else {
+
+					System.out.print("[" + rs.meta.name + "] Saving: " + prevC + " - " + prevT + ".mp3\n");
+					outStream.write(bufferQ.get(BufferQueue.READ));
+					outStream.write(bufferQ.get(BufferQueue.MID));
+
+					ID3v1Tag tag = new ID3v1Tag();
+					Mp3File mp3 = new Mp3File(tmpFile);
+
+					mp3.setId3v1Tag(tag);
+					tag.setArtist(prevC);
+					tag.setTitle(prevT);
+
+					String safeC = prevC.replace("*", "#").replace("<", "[").replace(">", "]").replace(":", "")
+							.replace("\"", "'").replace("\\", " ").replace("/", " ").replace("|", " ").replace("?", " ")
+							.trim();
+					String safeT = prevT.replace("*", "#").replace("<", "[").replace(">", "]").replace(":", "")
+							.replace("\"", "'").replace("\\", " ").replace("/", " ").replace("|", " ").replace("?", " ")
+							.trim();
+
+					mp3.save(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3");
+					rs.records.add(new File(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3"));
+					mp3 = null;
+
+				}
 			}
-			
+			System.out.println("Writing start of new song...");
 			outStream.close();
-			
+			outStream = null;
 			outStream = new FileOutputStream(tmpFile);
-			outStream.write(mus[idxTrailing]);
-			outStream.write(mus[idxLeading]);
+			outStream.write(bufferQ.get(BufferQueue.READ));
+			outStream.write(bufferQ.get(BufferQueue.MID));
+			outStream.write(bufferQ.get(BufferQueue.WRITE));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -175,15 +194,13 @@ public class RadioRecorder extends Thread {
 	}
 
 	private boolean check() {
+
 		if (currC == null || currT == null) {
-			System.err.println("Something went _horribly_ wrong while fetching metadata");
-			this.interrupt();
-			rs.lock = true;
-			rs.err = true;
+			return false;
 		}
 
 		if (!currC.equals(prevC) && !currT.equals(prevT)) {
-			System.out.println("New song started!");
+			System.out.println("[" + rs.meta.name + "] New song started: " + currC + " - " + currT);
 			return true;
 		}
 		return false;
