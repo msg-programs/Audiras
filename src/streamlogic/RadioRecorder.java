@@ -27,7 +27,7 @@ public class RadioRecorder extends Thread {
 
 	private String currC;
 	private String currT;
-	
+
 	private RadioStation rs;
 
 	private int blocksize = 0;
@@ -81,29 +81,27 @@ public class RadioRecorder extends Thread {
 			bufferQ.push(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
 			bufferQ.incIdxs();
-			updateMeta(bufferQ.getMeta(BufferQueue.MID));
-			System.out.println("Current Creator: " + currC);
-			System.out.println("Current Track: " + currT);
-			System.out.println("Last Creator: " + prevC);
-			System.out.println("Last Track: " + prevT);
+//			System.out.println("Current Creator: " + currC);
+//			System.out.println("Current Track: " + currT);
+//			System.out.println("Last Creator: " + prevC);
+//			System.out.println("Last Track: " + prevT);
 			bufferQ.push(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
 			bufferQ.incIdxs();
-			updateMeta(bufferQ.getMeta(BufferQueue.MID));
-			System.out.println("Current Creator: " + currC);
-			System.out.println("Current Track: " + currT);
-			System.out.println("Last Creator: " + prevC);
-			System.out.println("Last Track: " + prevT);
+//			System.out.println("Current Creator: " + currC);
+//			System.out.println("Current Track: " + currT);
+//			System.out.println("Last Creator: " + prevC);
+//			System.out.println("Last Track: " + prevT);
 
 			while (rs.recording) {
 				bufferQ.push(music.readNBytes(blocksize));
 				bufferQ.pushMeta(readMeta());
 				bufferQ.incIdxs();
-				updateMeta(bufferQ.getMeta(BufferQueue.MID));
-				System.out.println("Current Creator: " + currC);
-				System.out.println("Current Track: " + currT);
-				System.out.println("Last Creator: " + prevC);
-				System.out.println("Last Track: " + prevT);
+				updateMeta();
+//				System.out.println("Current Creator: " + currC);
+//				System.out.println("Current Track: " + currT);
+//				System.out.println("Last Creator: " + prevC);
+//				System.out.println("Last Track: " + prevT);
 
 				outStream.write(bufferQ.get(BufferQueue.WRITE));
 
@@ -122,35 +120,41 @@ public class RadioRecorder extends Thread {
 
 	private byte[] readMeta() throws IOException {
 		int len = music.read();
+		System.out.println("Read meta, " + len * 16 + " bytes");
 		return music.readNBytes(len * 16);
 	}
 
-	private void updateMeta(byte[] dat) {
+	private void updateMeta() {
 
-		String str = "";
+		String strOld = "";
+		String strNew = "";
 		try {
-			str = new String(dat, "UTF-8").trim();
+			strOld = new String(bufferQ.getMeta(BufferQueue.WRITE), "UTF-8").trim();
+			strNew = new String(bufferQ.getMeta(BufferQueue.MID), "UTF-8").trim();
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		if (str.length() == 0) {
-			System.out.println("Null string detected, assuming no change");
-			prevC = currC;
-			prevT = currT;
+		if (strOld.length() == 0 || strNew.length() == 0) {
+			System.out.println("Null string detected");
 			return;
 		}
 
 		System.out.println("Non-null string detected, updating");
 
-		String entry1 = str.split(";")[0];
-		String value = entry1.split("=")[1];
-		String[] info = value.split("-");
-		prevC = currC;
-		prevT = currT;
-		currC = info[0].trim().replace("'", "");
-		currT = info[1].trim().replace("'", "");
+		String entryOld = strOld.split(";")[0];
+		String valueOld = entryOld.split("=")[1];
+		String[] infoOld = valueOld.split("-");
+
+		String entryNew = strNew.split(";")[0];
+		String valueNew = entryNew.split("=")[1];
+		String[] infoNew = valueNew.split("-");
+		
+		prevC = infoOld[0].trim().replace("'", "");
+		prevT = infoOld[1].trim().replace("'", "");
+		currC = infoNew[0].trim().replace("'", "");
+		currT = infoNew[1].trim().replace("'", "");
 	}
 
 	private void save() {

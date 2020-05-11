@@ -14,12 +14,14 @@ public class BufferQueue {
 
 	private byte[][] buffers;
 	private byte[][] meta;
+	private byte[] lastNonNullMeta;
 	private int size;
 
 	public BufferQueue(int blocksize) {
 		buffers = new byte[3][blocksize];
 		meta = new byte[3][256 * 16];
 		size = blocksize;
+		lastNonNullMeta = new byte[256*16];
 	}
 
 	public void push(byte[] bytes) {
@@ -27,8 +29,14 @@ public class BufferQueue {
 	}
 
 	public void pushMeta(byte[] bytes) {
-		System.out.println("Pushing metadata: \"" + new String(bytes)+"\"");
-		System.arraycopy(bytes, 0, meta[inIdx], 0, bytes.length);
+		System.out.println(bytes.length);
+		if (bytes.length == 0) {
+			System.arraycopy(lastNonNullMeta, 0, meta[inIdx], 0, lastNonNullMeta.length);
+		} else {
+			System.out.println("Pushing metadata: \"" + new String(bytes) + "\"");
+			System.arraycopy(bytes, 0, meta[inIdx], 0, bytes.length);
+			System.arraycopy(bytes, 0, lastNonNullMeta, 0, bytes.length);
+		}
 	}
 
 	public byte[] get(int what) {
@@ -45,8 +53,9 @@ public class BufferQueue {
 	}
 
 	public byte[] getMeta(int what) {
-		System.out.println("Metastack is (RMW): \n\t" + new String(meta[inIdx]) + ", \n\t"+ new String(meta[bufIdx]) + ", \n\t"+ new String(meta[outIdx])+ ",");
-		
+		System.out.println("Metastack is (RMW): \n\t" + new String(meta[inIdx]) + ", \n\t" + new String(meta[bufIdx])
+				+ ", \n\t" + new String(meta[outIdx]) + ",");
+
 		if (what == READ) {
 			System.out.println("getting READ");
 			return meta[inIdx];
