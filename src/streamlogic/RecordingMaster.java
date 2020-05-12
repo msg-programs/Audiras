@@ -1,6 +1,5 @@
 package streamlogic;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import settings.Settings;
@@ -49,18 +48,20 @@ public class RecordingMaster {
 		if (Settings.getBlockCond() == Settings.NUM_ALL) {
 			int count = 0;
 			for (RadioStation rs : stations) {
+				System.out.println("Adding list of station " + rs.meta.name + ": " + rs.records.size());
 				count += rs.records.size();
 			}
-			if (count >= (int) Settings.getBlockMax()) {
-				setAllOff();
-			}
+			System.out.println(">= Comparing size of all (" + count + ") to block max (" + Settings.getBlockMax()+")");
+			return 	count >= (int) Settings.getBlockMax();
 		}
 		
 		// size_all
-		long size =0;
+		double size =0;
 		for (RadioStation rs : stations) {
+			System.out.println("Adding filesize of station " + rs.meta.name + ": " + rs.getRecSize());
 			size += rs.getRecSize();
 		}
+		System.out.println(">= Comparing size of all (" + size + ") to block max (" + Settings.getBlockMax()+")");
 		return size >= Settings.getBlockMax();
 	}
 

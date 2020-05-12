@@ -46,34 +46,34 @@ public class RadioStation {
 
 	boolean isFull() {
 		// num_all or size_all
+		System.out.println(meta.name + " Checking if full...");
 		if (Settings.getBlockCond() >= 2) {
+			System.out.println("Redirecting to master");
 			return RecordingMaster.isFull();
 		}
 
 		if (Settings.getBlockCond() == Settings.NUM_PER) {
+			System.out.println(meta.name + " >= Comparing size of list (" + records.size() + ") to block max (" + Settings.getBlockMax()+")");
 			return records.size() >= (int) Settings.getBlockMax();
 		}
 
-		// size_per
+		System.out.println(meta.name + " Comparing size of files to block max (" + Settings.getBlockMax()+")");
 		return getRecSize() >= Settings.getBlockMax();
 
 	}
 
-	public long getRecSize() {
-		try {
-			long size = Files.size(streamdir.toPath());
-			size /= 1000l; // kb
-			size /= 1000l; // mb
-			size /= 1000l; // gb
-			return size;
-		} catch (NoSuchFileException e) {
-			return 0;
+	public double getRecSize() {
+			double size = 0;
 			
-		} catch (IOException e) {
-			System.err.println("Something went wrong while trying to calculate the dir size");
-			e.printStackTrace();
-			return Long.MAX_VALUE;
-		}
+			for (File f : records) {
+				size += f.length();
+			}
+			
+			size /= 1000d; // kb
+			size /= 1000d; // mb
+			size /= 1000d; // gb
+			System.out.println("Files in "+ streamdir.toPath()+ " are " + size + " gb");
+			return size;
 	}
 
 	public void startRec() {

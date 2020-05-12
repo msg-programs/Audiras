@@ -29,11 +29,10 @@ public class BufferQueue {
 	}
 
 	public void pushMeta(byte[] bytes) {
-		System.out.println(bytes.length);
 		if (bytes.length == 0) {
 			System.arraycopy(lastNonNullMeta, 0, meta[inIdx], 0, lastNonNullMeta.length);
 		} else {
-			System.out.println("Pushing metadata: \"" + new String(bytes) + "\"");
+//			System.out.println("Pushing metadata: \"" + new String(bytes) + "\"");
 			System.arraycopy(bytes, 0, meta[inIdx], 0, bytes.length);
 			System.arraycopy(bytes, 0, lastNonNullMeta, 0, bytes.length);
 		}
@@ -53,19 +52,16 @@ public class BufferQueue {
 	}
 
 	public byte[] getMeta(int what) {
-		System.out.println("Metastack is (RMW): \n\t" + new String(meta[inIdx]) + ", \n\t" + new String(meta[bufIdx])
-				+ ", \n\t" + new String(meta[outIdx]) + ",");
+//		System.out.println("Metastack is (RMW): \n\t" + new String(meta[inIdx]) + ", \n\t" + new String(meta[bufIdx])
+//				+ ", \n\t" + new String(meta[outIdx]) + ",");
 
 		if (what == READ) {
-			System.out.println("getting READ");
 			return meta[inIdx];
 		}
 		if (what == MID) {
-			System.out.println("getting MID");
 			return meta[bufIdx];
 		}
 		if (what == WRITE) {
-			System.out.println("getting WRITE");
 			return meta[outIdx];
 		}
 		return null;
