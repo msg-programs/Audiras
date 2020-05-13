@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -13,71 +14,55 @@ import javax.swing.JOptionPane;
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.Mp3File;
 
-import settings.Lang;
-import settings.Settings;
-
 public class RadioRecorder extends Thread {
 
-	private InputStream music, data;
-	private File tmpFile, dir;
+	private InputStream music;
+	private File tmpFile;
 
 	private OutputStream outStream;
 
-	private static final int BUF_SZE = 1 * 1024;
+	// c = creator, t = title !!
+	private String prevC;
+	private String prevT;
 
-	private byte[] bufferPre = new byte[BUF_SZE];
-//	private byte[] bufferWrite = new byte[BUF_SZE];
-//	private byte[] bufferNew = new byte[BUF_SZE];
-
-	private URLConnection toData;
-	private String prevC = "";
-	private String prevT = "";
-
-	private String c = "";
-	private String t = "";
-	private String infoUrl;
+	private String currC;
+	private String currT;
 
 	private RadioStation rs;
 
-	private boolean empty = true;
+	private int blocksize = 0;
 
-	public RadioRecorder(RadioStation rs1) {
-		this.rs = rs1;
+	private BufferQueue bufferQ;
 
-		String streamURL = rs.url;
-		infoUrl = rs.url + ".xspf";
+	private boolean first = true;
 
-		dir = new File(Settings.getStreamDir() + "\\" + rs.name);
+	public RadioRecorder(RadioStation rs) {
+		this.rs = rs;
+		this.blocksize = rs.meta.metaInt;
+		this.first = true;
+		bufferQ = new BufferQueue(blocksize);
 
-		System.out.println(dir.getAbsolutePath());
-
-		if (!dir.exists()) {
-			if (!dir.mkdirs()) {
-				JOptionPane.showMessageDialog(null,"Couldn't create the directory!","Error",JOptionPane.ERROR_MESSAGE);
+		if (!rs.streamdir.exists()) {
+			if (!rs.streamdir.mkdirs()) {
+				JOptionPane.showMessageDialog(null, "Couldn't create the directory " + rs.streamdir + "!", "Error",
+						JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}
 		}
 
-		tmpFile = new File(dir.getAbsolutePath() + "\\tmp.mp3");
+		tmpFile = new File(rs.streamdir.getAbsolutePath() + "\\tmp.mp3");
 
 		try {
-			URLConnection toMusic = new URL(streamURL).openConnection();
+			URLConnection toMusic = new URL(rs.meta.url).openConnection();
+			toMusic.setRequestProperty("Icy-MetaData", "1");
+			toMusic.setRequestProperty("Connection", "close");
+			toMusic.setRequestProperty("Accept", null);
 			toMusic.connect();
 
-			toData = new URL(infoUrl).openConnection();
-			toData.connect();
-
 			music = toMusic.getInputStream();
-			data = toData.getInputStream();
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
-
-		for (int i = 0; i < BUF_SZE; i++) {
-			bufferPre[i] = 0;
-//			bufferWrite[i] = 0;
-//			bufferNew[i] = 0;
 		}
 
 		this.start();
@@ -85,113 +70,140 @@ public class RadioRecorder extends Thread {
 
 	@Override
 	public void run() {
-		if (RecordingMaster.checkFull(rs.id)) {
+		if (rs.isFull()) {
 			rs.lock = true;
 			return;
 		}
 
 		try {
-			int bytesRead;
 
 			outStream = new FileOutputStream(tmpFile);
+			bufferQ.push(music.readNBytes(blocksize));
+			bufferQ.pushMeta(readMeta());
+			bufferQ.incIdxs();
+//			System.out.println("Current Creator: " + currC);
+//			System.out.println("Current Track: " + currT);
+//			System.out.println("Last Creator: " + prevC);
+//			System.out.println("Last Track: " + prevT);
+			bufferQ.push(music.readNBytes(blocksize));
+			bufferQ.pushMeta(readMeta());
+			bufferQ.incIdxs();
+//			System.out.println("Current Creator: " + currC);
+//			System.out.println("Current Track: " + currT);
+//			System.out.println("Last Creator: " + prevC);
+//			System.out.println("Last Track: " + prevT);
 
-			while ((bytesRead = music.read(bufferPre)) != -1 && rs.recording) {
-				outStream.write(bufferPre, 0, BUF_SZE);
-//				long now = System.nanoTime();
-//				System.arraycopy(bufferWrite, 0, bufferPre, 0, BUF_SZE);
-//				System.arraycopy(bufferNew, 0, bufferWrite, 0, BUF_SZE);
-//				System.out.println(System.nanoTime()-now);
-//				System.exit(0);
+			while (rs.recording) {
+				bufferQ.push(music.readNBytes(blocksize));
+				bufferQ.pushMeta(readMeta());
+				bufferQ.incIdxs();
+				updateMeta();
+//				System.out.println("Current Creator: " + currC);
+//				System.out.println("Current Track: " + currT);
+//				System.out.println("Last Creator: " + prevC);
+//				System.out.println("Last Track: " + prevT);
+
+				outStream.write(bufferQ.get(BufferQueue.WRITE));
 
 				if (check()) {
 					save();
 				}
 			}
-//			System.out.println("Trying to close music in line 106");
 			music.close();
-//			System.out.println("Success");
-//			System.out.println("Trying to close data in line 110");
-			data.close();
-//			System.out.println("Success");
-//			System.out.println("Trying to close outStream in line 112");
 			outStream.close();
-//			System.out.println("Success");
 		} catch (IOException e) {
-			System.err.println("Error while writing in RRecorder for stream " + rs.name);
+			System.err.println("Error while writing in Recorder for stream " + rs.meta.name);
 			e.printStackTrace();
 			rs.recording = false;
 		}
 	}
 
+	private byte[] readMeta() throws IOException {
+		int len = music.read();
+		System.out.println("Read meta, " + len * 16 + " bytes");
+		return music.readNBytes(len * 16);
+	}
+
+	private void updateMeta() {
+
+		String strOld = "";
+		String strNew = "";
+		try {
+			strOld = new String(bufferQ.getMeta(BufferQueue.WRITE), "UTF-8").trim();
+			strNew = new String(bufferQ.getMeta(BufferQueue.MID), "UTF-8").trim();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if (strOld.length() == 0 || strNew.length() == 0) {
+			System.out.println("Null string detected");
+			return;
+		}
+
+		System.out.println("Non-null string detected, updating");
+
+		String entryOld = strOld.split(";")[0];
+		String valueOld = entryOld.split("=")[1];
+		String[] infoOld = valueOld.split("-");
+
+		String entryNew = strNew.split(";")[0];
+		String valueNew = entryNew.split("=")[1];
+		String[] infoNew = valueNew.split("-");
+		
+		prevC = infoOld[0].trim().replace("'", "");
+		prevT = infoOld[1].trim().replace("'", "");
+		currC = infoNew[0].trim().replace("'", "");
+		currT = infoNew[1].trim().replace("'", "");
+	}
+
 	private void save() {
 
 		try {
-
-			if (empty) {
-//				System.arraycopy(bufferWrite, 0, bufferPre, 0, BUF_SZE);
-				empty = false;
-			}
-
-//			outStream = new FileOutputStream(tmpFile);
-//			outStream.write(bufferNew);
-
-			if (prevC.equals("") || prevT.equals("") || rs.first) {
-				prevC = c;
-				prevT = t;
-//				outStream.close();
-				rs.first = false;
-				return;
-			}
-
-			ID3v1Tag tag = new ID3v1Tag();
-			Mp3File file = new Mp3File(tmpFile);
-
-			file.setId3v1Tag(tag);
-			tag.setArtist(prevC);
-			tag.setTitle(prevT);
-
-			if (RecordingMaster.checkFull(rs.id)) {
-				System.out.println("Check failed");
-				rs.lock = true;
-				rs.stopRec();
-				return;
+			bufferQ.pushMeta(new byte[] {});
+			bufferQ.incIdxs();
+			if (first) {
+				first = false;
+				System.out.println("First song detected, ignoring...");
 			} else {
-				RecordingMaster.addRecording(rs.id,
-						new File(dir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3"));
 
-				System.out.print("Saving: ");
-				System.out.println(prevC + " - " + prevT + ".mp3");
+				if (rs.isFull()) {
+					System.out.println("Recorder for " + rs.meta.name + " is full!");
+					rs.lock = true;
+					rs.stopRec();
+					return;
+				} else {
 
-				if (prevC.contains("\\")) {
-					String[] parts = prevC.split("\\");
-					prevC = parts[0] + parts[1];
+					System.out.print("[" + rs.meta.name + "] Saving: " + prevC + " - " + prevT + ".mp3\n");
+					outStream.write(bufferQ.get(BufferQueue.READ));
+					outStream.write(bufferQ.get(BufferQueue.MID));
+
+					Mp3File mp3 = new Mp3File(tmpFile);
+					ID3v1Tag tag = new ID3v1Tag();
+
+					mp3.setId3v1Tag(tag);
+					tag.setArtist(prevC);
+					tag.setTitle(prevT);
+
+					String safeC = prevC.replace("*", "#").replace("<", "[").replace(">", "]").replace(":", "")
+							.replace("\"", "'").replace("\\", " ").replace("/", " ").replace("|", " ").replace("?", " ")
+							.trim();
+					String safeT = prevT.replace("*", "#").replace("<", "[").replace(">", "]").replace(":", "")
+							.replace("\"", "'").replace("\\", " ").replace("/", " ").replace("|", " ").replace("?", " ")
+							.trim();
+
+					mp3.save(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3");
+					rs.records.add(new File(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3"));
+
 				}
-
-				if (prevC.contains("/")) {
-					String[] parts = prevC.split("/");
-					prevC = parts[0] + parts[1];
-				}
-
-				if (prevT.contains("\\")) {
-					String[] parts = prevT.split("\\");
-					prevT = parts[0] + parts[1];
-				}
-
-				if (prevT.contains("/")) {
-					String[] parts = prevT.split("/");
-					prevT = parts[0] + parts[1];
-				}
-
-				file.save(dir.getAbsolutePath() + "\\" + prevC + " - " + prevT + ".mp3");
 			}
-
-			prevC = c;
-			prevT = t;
-//			System.out.println("Trying to close outStream in line 162");
+			System.out.println("Writing start of new song...");
 			outStream.close();
-//			System.out.println("Success");
+
 			outStream = new FileOutputStream(tmpFile);
-			outStream.write(bufferPre);
+			outStream.write(bufferQ.get(BufferQueue.READ));
+			outStream.write(bufferQ.get(BufferQueue.MID));
+			outStream.write(bufferQ.get(BufferQueue.WRITE));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -200,57 +212,13 @@ public class RadioRecorder extends Thread {
 	}
 
 	private boolean check() {
-		try {
-			toData = new URL(infoUrl).openConnection();
-			toData.connect();
-			data = null;
-			data = toData.getInputStream();
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			c = "";
-			t = "";
-			rs.recording = false;
-		}
-
-		try {
-			String info = new String(data.readAllBytes());
-
-			int creator = info.indexOf("<creator>") + 9;
-			int creatorEnd = info.indexOf("</creator>");
-
-			int title = info.indexOf("<title>") + 7;
-			int titleEnd = info.indexOf("</title>");
-
-			t = info.substring(title, titleEnd).trim();
-
-			if (!(creatorEnd >= 0) || !(creator >= 0)) {
-				if (!t.contains("-")) {
-					c ="[Unknown]";
-				} else {
-					String parts[] = t.split("-");
-					c = parts[0].trim();
-					t = parts[1].trim();
-				}
-			} else {
-
-				c = info.substring(creator, creatorEnd).trim();
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			c = "";
-			t = "";
-		}
-
-		if (prevC.equals("") || prevT.equals("")) {
-			prevC = c;
-			prevT = t;
+		if (currC == null || currT == null) {
 			return false;
 		}
 
-		if (!c.equals(prevC) && !t.equals(prevT)) {
-			System.out.println("New song started!");
+		if (!currC.equals(prevC) || !currT.equals(prevT)) {
+			System.out.println("[" + rs.meta.name + "] New song started: " + currC + " - " + currT);
 			return true;
 		}
 		return false;

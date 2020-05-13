@@ -77,7 +77,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 
 		if (ae.getSource().equals(save)) {
 			Settings.setBlockMode(mode.getSelectedIndex());
-			Settings.setBlockMax(block.getText());
+			Settings.setBlockMax(Float.parseFloat(block.getText()));
 			Settings.setBootRec(recOnBoot.isSelected());
 			Settings.setInstRec(instRec.isSelected());
 			Settings.setShowWin(showWindow.isSelected());

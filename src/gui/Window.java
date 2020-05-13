@@ -1,16 +1,20 @@
 package gui;
 
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
-
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import main.RadioMain;
+import settings.Settings;
 
-public class Window extends JFrame {
+public class Window extends JFrame implements ChangeListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,6 +28,8 @@ public class Window extends JFrame {
 
 	public Window() {
 		super("Audiras");
+		ImageIcon icon = new ImageIcon(Settings.ICO.getAbsolutePath());
+		this.setIconImage(icon.getImage());
 
 		this.setMaximumSize(DIM);
 		this.setMinimumSize(DIM);
@@ -36,6 +42,7 @@ public class Window extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				dispose();
 				RadioMain.win = null;
+				System.exit(0);
 			}
 		});
 
@@ -49,11 +56,20 @@ public class Window extends JFrame {
 		tabs.addTab("Record", record);
 		tabs.addTab("Browse", list);
 		tabs.addTab("Settings", settings);
+		tabs.addChangeListener(this);
 
 		this.add(tabs);
 
 		this.pack();
 		this.setVisible(true);
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if (list.updateExtTable) {
+			record.populateTable();
+			list.updateExtTable=false;
+		}
 	}
 
 }
