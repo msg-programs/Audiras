@@ -80,14 +80,14 @@ public class RadioRecorder extends Thread {
 			outStream = new FileOutputStream(tmpFile);
 			bufferQ.push(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
-			bufferQ.incIdxs();
+//			bufferQ.incIdxs();
 //			System.out.println("Current Creator: " + currC);
 //			System.out.println("Current Track: " + currT);
 //			System.out.println("Last Creator: " + prevC);
 //			System.out.println("Last Track: " + prevT);
 			bufferQ.push(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
-			bufferQ.incIdxs();
+//			bufferQ.incIdxs();
 //			System.out.println("Current Creator: " + currC);
 //			System.out.println("Current Track: " + currT);
 //			System.out.println("Last Creator: " + prevC);
@@ -96,7 +96,7 @@ public class RadioRecorder extends Thread {
 			while (rs.recording) {
 				bufferQ.push(music.readNBytes(blocksize));
 				bufferQ.pushMeta(readMeta());
-				bufferQ.incIdxs();
+//				bufferQ.incIdxs();
 				updateMeta();
 //				System.out.println("Current Creator: " + currC);
 //				System.out.println("Current Track: " + currT);
@@ -163,8 +163,6 @@ public class RadioRecorder extends Thread {
 	private void save() {
 
 		try {
-			bufferQ.pushMeta(new byte[] {});
-			bufferQ.incIdxs();
 			if (first) {
 				first = false;
 //				System.out.println("First song detected, ignoring...");
@@ -199,8 +197,7 @@ public class RadioRecorder extends Thread {
 			outStream.close();
 
 			outStream = new FileOutputStream(tmpFile);
-			outStream.write(bufferQ.get(BufferQueue.READ));
-			outStream.write(bufferQ.get(BufferQueue.MID));
+//			outStream.write(bufferQ.get(BufferQueue.READ));
 
 			if (rs.isFull()) {
 //				System.out.println("Recorder for " + rs.meta.name + " is full!");
