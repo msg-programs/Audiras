@@ -31,9 +31,7 @@ public class RecordingMaster {
 
 	public static void setAllOn() {
 		for (RadioStation rs : stations) {
-			if (!rs.lock) {
-				rs.startRec();
-			}
+			rs.startRec();
 		}
 	}
 
@@ -51,17 +49,18 @@ public class RecordingMaster {
 				System.out.println("Adding list of station " + rs.meta.name + ": " + rs.records.size());
 				count += rs.records.size();
 			}
-			System.out.println(">= Comparing size of all (" + count + ") to block max (" + Settings.getBlockMax()+")");
-			return 	count >= (int) Settings.getBlockMax();
+			System.out
+					.println(">= Comparing size of all (" + count + ") to block max (" + Settings.getBlockMax() + ")");
+			return count >= (int) Settings.getBlockMax();
 		}
-		
+
 		// size_all
-		double size =0;
+		double size = 0;
 		for (RadioStation rs : stations) {
 			System.out.println("Adding filesize of station " + rs.meta.name + ": " + rs.getRecSize());
 			size += rs.getRecSize();
 		}
-		System.out.println(">= Comparing size of all (" + size + ") to block max (" + Settings.getBlockMax()+")");
+		System.out.println(">= Comparing size of all (" + size + ") to block max (" + Settings.getBlockMax() + ")");
 		return size >= Settings.getBlockMax();
 	}
 
@@ -76,8 +75,6 @@ public class RecordingMaster {
 
 	public static void remove(RadioStation rs) {
 		stations.remove(rs);
-
-		// TODO ask for record deletion
 	}
 
 }

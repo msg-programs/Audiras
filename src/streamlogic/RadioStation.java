@@ -77,7 +77,7 @@ public class RadioStation {
 	}
 
 	public void startRec() {
-		if (!lock) {
+		if (!lock && !recording) {
 			new RadioRecorder(this);
 			recording = true;
 		}
