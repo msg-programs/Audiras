@@ -1,7 +1,6 @@
 package streamlogic;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
@@ -28,15 +27,15 @@ public class StreamMeta {
 			URLConnection conn = new URL(url).openConnection();
 			conn.setRequestProperty("Icy-MetaData", "1");
 			conn.setRequestProperty("Connection", "close");
-			conn.setReadTimeout(1000);
-			conn.setConnectTimeout(1000);
+			conn.setReadTimeout(5000);
+			conn.setConnectTimeout(5000);
 
 			res = conn.getHeaderFields();
 
 			conn.getInputStream().close(); // hm
 
 		} catch (IOException e) {
-			System.err.println(url + " doesn't seem to be valid or timed out!");
+//			System.err.println(url + " doesn't seem to be valid or timed out!");
 			error = "Connection error!";
 			return;
 		}
@@ -59,7 +58,7 @@ public class StreamMeta {
 			bitrate = res.get("icy-br").get(0);
 
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("Error while parsing metadata!");
+//			System.err.println("Error while parsing metadata!");
 			error = "Invalid metadata!";
 		}
 
@@ -68,12 +67,6 @@ public class StreamMeta {
 		} catch (NumberFormatException e) {
 			error = "No metaint was send!";
 		}
-//		System.out.println("=== METADATA ===");
-//		System.out.println("name: " + name);
-//		System.out.println("format: " + format);
-//		System.out.println("genre: " + genre);
-//		System.out.println("bitrate: " + bitrate);
-//		System.out.println("metaint: " + metaInt);
 	}
 
 }
