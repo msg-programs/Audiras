@@ -9,7 +9,6 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -29,7 +28,6 @@ public class RadioMain {
 	public static Window win = null;
 
 	public static void main(String[] args) {
-
 		Settings.init();
 		System.out.println("s init");
 		Lang.init();

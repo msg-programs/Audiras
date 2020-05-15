@@ -1,7 +1,5 @@
 package streamlogic;
 
-import java.io.InputStream;
-
 public class BufferQueue {
 
 	public static final int READ = 0;
