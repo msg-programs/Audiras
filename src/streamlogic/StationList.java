@@ -4,16 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import settings.Lang;
 import settings.Settings;
 
 public class StationList {
@@ -25,22 +21,24 @@ public class StationList {
 	public static void init() {
 
 		if (!STREAMFILE.exists()) {
-			JOptionPane.showMessageDialog(null, "Stream list file not found!\nPlease download the streamfile and try again\nProgram will exit.", "Error", JOptionPane.ERROR_MESSAGE);
-			System.exit(0); // could open without anything, but why? stream recorder is useless w/o streams...
+			JOptionPane.showMessageDialog(null,
+					"Stream list file not found!\nPlease download the streamfile and try again\nProgram will exit.",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(0); // could open without anything, but why? stream recorder is useless w/o
+							// streams...
 		}
 
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(STREAMFILE));
 			String line;
 
-			
 			int i = 0;
 			while ((line = br.readLine()) != null) {
 				if (line.equals("")) {
 					continue;
 				}
-					stations.add(new RadioStation(line,i));
-					i++;
+				stations.add(new RadioStation(line, i));
+				i++;
 
 			}
 
@@ -55,8 +53,12 @@ public class StationList {
 
 	// test if the url given is a stream that can be recorded from
 	public static boolean isValidStream(String url) {
-
-		return true;
+		StreamMeta meta = new StreamMeta(url);
+		if (meta.error != null) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	// add inputted station to list of radiostations and the file STREAMFILE
