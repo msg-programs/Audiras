@@ -22,9 +22,12 @@
 
 ### Settings tab:
 * Checkboxes: Should the program start on Windows startup? When the program is starting, start all recordings? When the program is run, show the window? 
+* Dropdown and text field: Set recording limit
+* Save button: save settings
 
 ## == Generated files:  
-* Image will be saved as with a number as the name in the same directory as the jar.
+* in directory /data: settings.ini (settings file)
+* all recorded songs go to folders named like the station inside the given directory (default: same as .jar)
 
 ## == Final notes:
 * Currently only supports audio/mpeg streams
