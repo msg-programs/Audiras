@@ -22,6 +22,8 @@ import streamlogic.StationList;
 
 public class ListPanel extends JPanel implements ActionListener, ListSelectionListener {
 
+	private static final long serialVersionUID = 1L;
+	
 	private DefaultTableModel model;
 	private JTable table;
 	private InfoPanel info;

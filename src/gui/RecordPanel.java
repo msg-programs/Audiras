@@ -21,6 +21,8 @@ import streamlogic.RecordingMaster;
 
 public class RecordPanel extends JPanel implements ActionListener, ListSelectionListener {
 
+	private static final long serialVersionUID = 1L;
+	
 	private JTable table;
 	private DefaultTableModel model;
 	private JButton masOn, masOff, recToggle, delete;
