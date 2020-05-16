@@ -1,18 +1,15 @@
 == hi prio TOOD
-StationList: 	dont allow error'd streams to be added
-SettingsPanel:	fix labels
-Lang:			re-add lang
-RadioRecorder:	re-join if split-char like "-" in title
-				update UI on recording change
+kbit string to bitrate
 
 == low prio TODO
 SettingPanel:	Add target recording dir chooser
 				recalc blocking on setting change
-				recalc blocking button	
-Settings:		rewrite autostart
+RecordPanel: 	update on stopped recording
 Lang: 			add default settings	
 RecordingMaster:ask if recording should be deleted, warn bcs size not monitored anymore
 RadioMain: 		trayicon image not showing ??
+				fix settings save hack
+Window: 		only save/update on right tab change, not always
 
 == next update todo
 ListPanel:		add search bar
