@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
+import settings.Lang;
 import settings.Settings;
 
 public class StationList {
@@ -21,32 +22,30 @@ public class StationList {
 	public static void init() {
 
 		if (!STREAMFILE.exists()) {
-			JOptionPane.showMessageDialog(null,
-					"Stream list file not found!\nPlease download the streamfile and try again\nProgram will exit.",
-					"Error", JOptionPane.ERROR_MESSAGE);
-			System.exit(0); // could open without anything, but why? stream recorder is useless w/o
-							// streams...
-		}
+			JOptionPane.showMessageDialog(null, Lang.get("err_noStreamFile"), Lang.get("err"),
+					JOptionPane.ERROR_MESSAGE);
+		} else {
 
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(STREAMFILE));
-			String line;
+			try {
+				BufferedReader br = new BufferedReader(new FileReader(STREAMFILE));
+				String line;
 
-			int i = 0;
-			while ((line = br.readLine()) != null) {
-				if (line.equals("")) {
-					continue;
+				int i = 0;
+				while ((line = br.readLine()) != null) {
+					if (line.equals("")) {
+						continue;
+					}
+					stations.add(new RadioStation(line, i));
+					i++;
+
 				}
-				stations.add(new RadioStation(line, i));
-				i++;
 
+				br.close();
+
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, Lang.get("err_streamFileRead"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
 			}
-
-			br.close();
-
-		} catch (IOException e) {
-			System.err.println("Something went wrong while loading the stream list:");
-			e.printStackTrace();
 		}
 
 	}
@@ -68,7 +67,7 @@ public class StationList {
 			RadioStation rs = new RadioStation(s, stations.size());
 			stations.add(rs);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Error while adding stream!", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, Lang.get("err_streamAdd"), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

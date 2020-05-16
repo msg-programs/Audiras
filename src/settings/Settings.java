@@ -7,12 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import streamlogic.RadioStation;
@@ -27,7 +23,6 @@ public class Settings {
 
 	private static final File INI = new File(THIS_DIR + "/data/settings.ini");
 	public static final File ICO = new File(THIS_DIR + "/data/icon.png");
-//	public static final File BAT = new File(THIS_DIR + "/data/autoexec.bat");
 
 	public static final int NUM_PER = 0;
 	public static final int SIZE_PER = 1;
@@ -39,22 +34,9 @@ public class Settings {
 		try {
 			INI.createNewFile();
 		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, Lang.get("err_iniFile"), Lang.get("err"),JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-
-//		if (!BAT.exists()) {
-//			try {
-//
-//				PrintWriter pw = new PrintWriter(BAT);
-//
-//				pw.println("@echo off");
-//				pw.println("java -jar \"" + THIS_DIR.getAbsolutePath() + "/Audiras.jar\"");
-//				pw.close();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//				JOptionPane.showMessageDialog(null, "Error while creating autostart file!","Error",JOptionPane.ERROR_MESSAGE);
-//			}
-//		}
 
 		try {
 			BufferedReader bfr = new BufferedReader(new FileReader(INI));
@@ -76,7 +58,7 @@ public class Settings {
 			PrintStream out = new PrintStream(INI);
 
 			for (String key : settings.keySet()) {
-				if (!key.equals("num_streams") && !key.contains("stream_")) {
+				if (!key.equals("num_streams") && !key.contains("station_")) {
 					String val = settings.get(key);
 
 					out.println(key + "->" + val);
@@ -98,39 +80,39 @@ public class Settings {
 					save();
 				}
 			} catch (IOException e1) {
+				JOptionPane.showMessageDialog(null, Lang.get("err_iniFile"), Lang.get("err"),JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 			}
 
 			e.printStackTrace();
 		}
+		
+		File astart = new File(
+				System.getenv("appdata") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\audiras.bat");
 
-//		File vbs = new File(
-//				System.getenv("appdata") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\audiras.vbs");
-//
-//		if (getBootRec()) {
-//
-//			if (vbs.exists()) {
-//				return;
-//			}
-//
-//			try {
-//				PrintWriter pw = new PrintWriter(vbs);
-//
-//				pw.println("Set ws = CreateObject(\"Wscript.Shell\")");
-//				pw.println("ws.run \"cmd /c " + BAT.getAbsolutePath() + "\",vbhide");
-//
-//				pw.close();
-//			} catch (FileNotFoundException e) {
-//				e.printStackTrace();
-//			}
-//
-//		} else {
-//
-//			if (!vbs.exists()) {
-//				return;
-//			}
-//			vbs.delete();
-//		}
+		if (doStartOnBoot()) {
+
+			if (astart.exists()) {
+				return;
+			}
+			try {
+				PrintWriter pw = new PrintWriter(astart);
+
+				pw.println("@echo off");
+				pw.println("javaw -jar \"" + THIS_DIR.getAbsolutePath() + "\\Audiras.jar\"");
+
+				pw.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, Lang.get("err_astart"),Lang.get("err"),JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+
+			if (!astart.exists()) {
+				return;
+			}
+			astart.delete();
+		}
 	}
 
 	public static String getStreamDir() {
@@ -165,19 +147,19 @@ public class Settings {
 		settings.put("block_max", String.valueOf(num));
 	}
 
-	public static void setBootRec(boolean selected) {
-		settings.put("boot_rec", (selected) ? "1" : "0");
+	public static void setStartOnBoot(boolean selected) {
+		settings.put("boot_strt", (selected) ? "1" : "0");
 
 	}
 
-	public static boolean getBootRec() {
-		if (!settings.containsKey("boot_rec")) {
-			settings.put("boot_rec", "0");
+	public static boolean doStartOnBoot() {
+		if (!settings.containsKey("boot_strt")) {
+			settings.put("boot_strt", "0");
 		}
-		return settings.get("boot_rec").equals("1");
+		return settings.get("boot_strt").equals("1");
 	}
 
-	public static boolean getShowWin() {
+	public static boolean doShowWin() {
 		if (!settings.containsKey("shw_win")) {
 			settings.put("shw_win", "1");
 		}
@@ -189,15 +171,15 @@ public class Settings {
 
 	}
 
-	public static boolean getInstRec() {
-		if (!settings.containsKey("inst_rec")) {
-			settings.put("inst_rec", "0");
+	public static boolean doStartRec() {
+		if (!settings.containsKey("strt_rec")) {
+			settings.put("strt_rec", "0");
 		}
-		return settings.get("inst_rec").equals("1");
+		return settings.get("strt_rec").equals("1");
 	}
 
-	public static void setInstRec(boolean selected) {
-		settings.put("inst_rec", (selected) ? "1" : "0");
+	public static void setStartRec(boolean selected) {
+		settings.put("strt_rec", (selected) ? "1" : "0");
 
 	}
 

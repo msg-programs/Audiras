@@ -33,7 +33,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 
 		// --LEFT SIDE SETUP START
 		Border border = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-		TitledBorder contentB = BorderFactory.createTitledBorder(border, "Streams");
+		TitledBorder contentB = BorderFactory.createTitledBorder(border, Lang.get("lbl_streams"));
 
 		JPanel dispL = new JPanel();
 		dispL.setLayout(null);
@@ -67,12 +67,12 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 
 		// ---TABLE SETUP END
 
-		masOn = new JButton("Start all");
+		masOn = new JButton(Lang.get("btn_masterStart"));
 		masOn.setBounds(10, 160, 140, 20);
 		dispL.add(masOn);
 		masOn.addActionListener(this);
 
-		masOff = new JButton("Stop all");
+		masOff = new JButton(Lang.get("btn_masterStop"));
 		masOff.setBounds(10, 185, 140, 20);
 		dispL.add(masOff);
 		masOff.addActionListener(this);
@@ -80,20 +80,20 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 		// --LEFT SETUP END
 
 		// --RIGHT SETUP START
-		TitledBorder contentR = BorderFactory.createTitledBorder(border, "Stream info");
+		TitledBorder contentR = BorderFactory.createTitledBorder(border, Lang.get("lbl_streamInfo"));
 
 		dispR = new InfoPanel();
 		dispR.setBounds(180, 10, 180, 217);
 		dispR.setBorder(contentR);
 		dispR.setLayout(null);
 
-		recToggle = new JButton("Start recording");
+		recToggle = new JButton(Lang.get("btn_startRec")); // will get overwritten later, but needs default value
 		recToggle.setEnabled(false);
 		recToggle.setBounds(15, 160, 150, 20);
 		dispR.add(recToggle);
 		recToggle.addActionListener(this);
 
-		delete = new JButton("Remove stream");
+		delete = new JButton(Lang.get("btn_deleteStream"));
 		delete.setBounds(15, 185, 150, 20);
 		delete.setEnabled(false);
 		dispR.add(delete);
@@ -133,18 +133,19 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 
 		recToggle.setEnabled(true);
 
-		dispR.updateText(rs);
 		if (rs != null) {
+			rs.recalcFull();
 			recToggle.setText(rs.getButtonStatus());
 			delete.setEnabled(true);
 
-			if (rs.lock) {
+			if (rs.isFull) {
 				recToggle.setEnabled(false);
 			}
 		} else {
 			recToggle.setEnabled(false);
 			delete.setEnabled(false);
 		}
+		dispR.updateText(rs);
 
 	}
 
@@ -179,8 +180,8 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 		dispR.updateText(rs);
 		if (rs != null) {
 			recToggle.setText(rs.getButtonStatus());
-			if (rs.err) {
-				recToggle.setText(Lang.get("rec_tog_on"));
+			if (rs.hasError) {
+				recToggle.setText(Lang.get("btn_startRec"));
 				recToggle.setEnabled(true);
 			}
 		} else {

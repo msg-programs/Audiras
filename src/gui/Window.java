@@ -11,6 +11,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import main.RadioMain;
+import settings.Lang;
 import settings.Settings;
 
 public class Window extends JFrame implements ChangeListener {
@@ -19,7 +20,7 @@ public class Window extends JFrame implements ChangeListener {
 
 	private static final Dimension DIM = new Dimension(387, 300);
 
-	private SettingPanel settings;
+	public SettingPanel settings;
 	private RecordPanel record;
 	private ListPanel list;
 
@@ -52,9 +53,9 @@ public class Window extends JFrame implements ChangeListener {
 		list = new ListPanel();
 		settings = new SettingPanel();
 
-		tabs.addTab("Record", record);
-		tabs.addTab("Browse", list);
-		tabs.addTab("Settings", settings);
+		tabs.addTab(Lang.get("tab_record"), record);
+		tabs.addTab(Lang.get("tab_list"), list);
+		tabs.addTab(Lang.get("tab_settings"), settings);
 		tabs.addChangeListener(this);
 
 		this.add(tabs);
@@ -67,8 +68,9 @@ public class Window extends JFrame implements ChangeListener {
 	public void stateChanged(ChangeEvent e) {
 		if (list.updateExtTable) {
 			record.populateTable();
-			list.updateExtTable=false;
+			list.updateExtTable = false;
 		}
+		settings.save();
 	}
 
 }

@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.Mp3File;
 
+import settings.Lang;
+
 public class RadioRecorder extends Thread {
 
 	private InputStream music;
@@ -44,7 +46,7 @@ public class RadioRecorder extends Thread {
 
 		if (!rs.streamdir.exists()) {
 			if (!rs.streamdir.mkdirs()) {
-				JOptionPane.showMessageDialog(null, "Couldn't create the directory " + rs.streamdir + "!", "Error",
+				JOptionPane.showMessageDialog(null, String.format(Lang.get("err_createDir"), rs.streamdir),Lang.get("err"),
 						JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}
@@ -63,6 +65,9 @@ public class RadioRecorder extends Thread {
 
 		} catch (IOException e) {
 			e.printStackTrace();
+			rs.stopRec();
+			rs.hasError = true;
+			rs.meta.error = Lang.get("err_conn");
 		}
 
 		this.start();
@@ -70,8 +75,8 @@ public class RadioRecorder extends Thread {
 
 	@Override
 	public void run() {
-		if (rs.isFull()) {
-			rs.lock = true;
+		rs.recalcFull();
+		if (rs.isFull) {
 			return;
 		}
 
@@ -80,28 +85,13 @@ public class RadioRecorder extends Thread {
 			outStream = new FileOutputStream(tmpFile);
 			bufferQ.push(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
-//			bufferQ.incIdxs();
-//			System.out.println("Current Creator: " + currC);
-//			System.out.println("Current Track: " + currT);
-//			System.out.println("Last Creator: " + prevC);
-//			System.out.println("Last Track: " + prevT);
 			bufferQ.push(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
-//			bufferQ.incIdxs();
-//			System.out.println("Current Creator: " + currC);
-//			System.out.println("Current Track: " + currT);
-//			System.out.println("Last Creator: " + prevC);
-//			System.out.println("Last Track: " + prevT);
 
-			while (rs.recording) {
+			while (rs.isRecording) {
 				bufferQ.push(music.readNBytes(blocksize));
 				bufferQ.pushMeta(readMeta());
-//				bufferQ.incIdxs();
 				updateMeta();
-//				System.out.println("Current Creator: " + currC);
-//				System.out.println("Current Track: " + currT);
-//				System.out.println("Last Creator: " + prevC);
-//				System.out.println("Last Track: " + prevT);
 
 				outStream.write(bufferQ.get(BufferQueue.WRITE));
 
@@ -114,7 +104,9 @@ public class RadioRecorder extends Thread {
 		} catch (IOException e) {
 			System.err.println("Error while writing in Recorder for stream " + rs.meta.name);
 			e.printStackTrace();
-			rs.recording = false;
+			rs.stopRec();
+			rs.hasError = true;
+			rs.meta.error = Lang.get("err_conn");
 		}
 	}
 
@@ -138,7 +130,6 @@ public class RadioRecorder extends Thread {
 			return;
 		}
 
-//		System.out.println("Non-null string detected, updating");
 		try {
 			String entryOld = strOld.split(";")[0];
 			String valueOld = entryOld.split("=")[1];
@@ -146,7 +137,7 @@ public class RadioRecorder extends Thread {
 
 			String entryNew = strNew.split(";")[0];
 			String valueNew = entryNew.split("=")[1];
-			String[] infoNew = valueNew.split("-");
+			String[] infoNew = valueNew.split(" - ");
 
 			prevC = infoOld[0].trim().replace("'", "");
 			prevT = infoOld[1].trim().replace("'", "");
@@ -156,7 +147,8 @@ public class RadioRecorder extends Thread {
 			System.out.println(strOld);
 			System.out.println(strNew);
 			rs.stopRec();
-			rs.lock = true;
+			rs.hasError = true;
+			
 		}
 	}
 
@@ -165,7 +157,6 @@ public class RadioRecorder extends Thread {
 		try {
 			if (first) {
 				first = false;
-//				System.out.println("First song detected, ignoring...");
 			} else {
 
 				System.out.print("[" + rs.meta.name + "] Saving: " + prevC + " - " + prevT + ".mp3\n");
@@ -193,15 +184,14 @@ public class RadioRecorder extends Thread {
 
 			}
 
-//			System.out.println("Writing start of new song...");
 			outStream.close();
 
 			outStream = new FileOutputStream(tmpFile);
 //			outStream.write(bufferQ.get(BufferQueue.READ));
 
-			if (rs.isFull()) {
+			rs.recalcFull();
+			if (rs.isFull) {
 //				System.out.println("Recorder for " + rs.meta.name + " is full!");
-				rs.lock = true;
 				rs.stopRec();
 				return;
 			}
@@ -219,7 +209,7 @@ public class RadioRecorder extends Thread {
 		}
 
 		if (!currC.equals(prevC) || !currT.equals(prevT)) {
-//			System.out.println("[" + rs.meta.name + "] New song started: " + currC + " - " + currT);
+			System.out.println("[" + rs.meta.name + "] New song started: " + currC + " - " + currT);
 			return true;
 		}
 		return false;

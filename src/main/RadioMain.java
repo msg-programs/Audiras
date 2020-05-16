@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import gui.Window;
 import settings.Lang;
@@ -29,28 +30,29 @@ public class RadioMain {
 
 	public static void main(String[] args) {
 		Settings.init();
-		System.out.println("s init");
+//		System.out.println("s init");
 		Lang.init();
-		System.out.println("l init");
+//		System.out.println("l init");
 		StationList.init();
-		System.out.println("sl init");
+//		System.out.println("sl init");
 		RecordingMaster.init();
-		System.out.println("rm init");
+//		System.out.println("rm init");
 
 		initTrayIcon();
 
-		if (Settings.getInstRec()) {
+		if (Settings.doStartRec()) {
 			RecordingMaster.setAllOn();
 		}
 
-		if (Settings.getShowWin()) {
+		if (Settings.doShowWin()) {
 			win = new Window();
 		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				Settings.save();
-				System.out.println("Settings saved!");
+				if (win!=null) {
+					win.settings.save(); // ugly change later
+				}
 			}
 		});
 	}
@@ -65,12 +67,12 @@ public class RadioMain {
 			try {
 				i = ImageIO.read(Settings.ICO);
 			} catch (IOException e1) {
-				System.err.println("Couldn't load the tray icon image!");
+				JOptionPane.showMessageDialog(null, Lang.get("err_noTrayIco"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 			}
 
-			MenuItem open = new MenuItem("Open window");
-			MenuItem close = new MenuItem("Exit Audiras");
+			MenuItem open = new MenuItem(Lang.get("ti_open"));
+			MenuItem close = new MenuItem(Lang.get("ti_exit"));
 
 			ActionListener al = new ActionListener() {
 				public void actionPerformed(ActionEvent ae) {
@@ -99,7 +101,7 @@ public class RadioMain {
 			try {
 				t.add(ti);
 			} catch (AWTException e) {
-				System.err.println("Couldn't create the tray icon:");
+				JOptionPane.showMessageDialog(null, Lang.get("err_addTrayIco"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 		}

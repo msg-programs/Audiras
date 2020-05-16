@@ -6,18 +6,19 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
+import settings.Lang;
 import settings.Settings;
 
 public class RadioStation {
 
 	public StreamMeta meta;
 
-	public boolean recording = false;
-	public boolean err = false;
-	public boolean lock = false;
+	public boolean isRecording = false;
+	public boolean hasError = false;
+	public boolean isFull = false;
 
 	public ArrayList<File> records = new ArrayList<>();
-	
+
 	public File streamdir = null;
 
 	public int id;
@@ -28,82 +29,92 @@ public class RadioStation {
 		this.id = id;
 
 		if (meta.error != null) {
-			err = true;
+			hasError = true;
 		}
-
+		
 		streamdir = new File(Settings.getStreamDir() + "\\" + meta.name);
+
+		doDirScan();
+
+		recalcFull();
+	}
+
+	public void doDirScan() {
+		records.clear();
 		if (streamdir.exists()) {
 			for (File f : streamdir.listFiles()) {
 				if (f.getName().equals("tmp.mp3")) {
 					continue;
 				}
+				System.out.println(f);
 				records.add(f);
 			}
 		}
-
-		lock = isFull();
 	}
 
 	boolean isFull() {
 		// num_all or size_all
-		System.out.println(meta.name + " Checking if full...");
+//		System.out.println(meta.name + " Checking if full...");
 		if (Settings.getBlockCond() >= 2) {
-			System.out.println("Redirecting to master");
+//			System.out.println("Redirecting to master");
 			return RecordingMaster.isFull();
 		}
 
 		if (Settings.getBlockCond() == Settings.NUM_PER) {
-			System.out.println(meta.name + " >= Comparing size of list (" + records.size() + ") to block max (" + Settings.getBlockMax()+")");
+//			System.out.println(meta.name + " >= Comparing size of list (" + records.size() + ") to block max (" + Settings.getBlockMax()+")");
 			return records.size() >= (int) Settings.getBlockMax();
 		}
 
-		System.out.println(meta.name + " Comparing size of files to block max (" + Settings.getBlockMax()+")");
+//		System.out.println(meta.name + " Comparing size of files to block max (" + Settings.getBlockMax()+")");
 		return getRecSize() >= Settings.getBlockMax();
 
 	}
 
+	public void recalcFull() {
+		isFull = isFull();
+	}
+
 	public double getRecSize() {
-			double size = 0;
-			
-			for (File f : records) {
-				size += f.length();
-			}
-			
-			size /= 1000d; // kb
-			size /= 1000d; // mb
-			size /= 1000d; // gb
-			System.out.println("Files in "+ streamdir.toPath()+ " are " + size + " gb");
-			return size;
+		double size = 0;
+
+		for (File f : records) {
+			size += f.length();
+		}
+
+		size /= 1000d; // kb
+		size /= 1000d; // mb
+		size /= 1000d; // gb
+		return size;
 	}
 
 	public void startRec() {
-		if (!lock && !recording) {
+		if (!isFull && !isRecording) {
 			new RadioRecorder(this);
-			recording = true;
+			isRecording = true;
 		}
 	}
 
 	public void stopRec() {
-		recording = false;
+		isRecording = false;
 		System.out.println("Stopped RStation " + meta.name);
 	}
 
 	public String getStatus() {
 
-		if (err) {
-			return "Connection error";
+		if (hasError) {
+			return meta.error;
 		}
 
-		if (lock) {
-			return "Hit the limit";
+		if (isFull) {
+			return Lang.get("stat_full");
 		}
 
-		if (recording) {
-			return "Recording";
+		if (isRecording) {
+			return Lang.get("stat_recording");
 		}
 
-		if (!recording) {
-			return "Idle";
+		if (!isRecording) {
+			return Lang.get("stat_idle");
 		}
 
 		return "???";
@@ -111,12 +122,12 @@ public class RadioStation {
 
 	public String getButtonStatus() {
 
-		if (!recording || err || lock) {
-			return "Start recording";
+		if (!isRecording || hasError || isFull) {
+			return Lang.get("btn_startRec");
 		}
 
-		if (recording) {
-			return "Stop recording";
+		if (isRecording) {
+			return Lang.get("btn_stopRec");
 		}
 		return null;
 	}

@@ -16,6 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
+import settings.Lang;
 import streamlogic.RadioStation;
 import streamlogic.RecordingMaster;
 import streamlogic.StationList;
@@ -36,7 +37,7 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 		this.setLayout(null);
 
 		Border border = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
-		TitledBorder contentR = BorderFactory.createTitledBorder(border, "Stream info");
+		TitledBorder contentR = BorderFactory.createTitledBorder(border, Lang.get("lbl_streamInfo"));
 
 		info = new InfoPanel();
 		info.setBounds(180, 10, 180, 217);
@@ -46,19 +47,19 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 //-RIGHT SETUP END
 
 		// --LEFT SIDE SETUP START
-		TitledBorder contentS = BorderFactory.createTitledBorder(border, "Stream list");
+		TitledBorder contentS = BorderFactory.createTitledBorder(border, Lang.get("lbl_streamList"));
 		JPanel dispL2 = new JPanel();
 		dispL2.setLayout(null);
 		dispL2.setBorder(contentS);
 		dispL2.setBounds(10, 10, 160, 217);
 		this.add(dispL2);
 
-		moveRec = new JButton("Record Stream");
+		moveRec = new JButton(Lang.get("btn_recordStream"));
 		moveRec.setBounds(15, 160, 150, 20);
 		info.add(moveRec);
 		moveRec.addActionListener(this);
 
-		addS = new JButton("Add new");
+		addS = new JButton(Lang.get("btn_addNewStream"));
 		addS.setBounds(15, 185, 150, 20);
 		info.add(addS);
 		addS.addActionListener(this);
@@ -114,10 +115,10 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 		info.updateText(rs);
 		if (RecordingMaster.stations.contains(rs)) {
 			moveRec.setEnabled(false);
-			moveRec.setText("Already on list!");
+			moveRec.setText(Lang.get("btn_alreadyThere"));
 		} else {
 			moveRec.setEnabled(true);
-			moveRec.setText("Record Stream");
+			moveRec.setText(Lang.get("btn_addNewStream"));
 		}
 		
 
@@ -129,9 +130,9 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 			moveRecorder();
 		}
 		if (ae.getSource().equals(addS)) {
-			String url = (String) JOptionPane.showInputDialog(null, "Enter new stream's URL");
+			String url = (String) JOptionPane.showInputDialog(null, Lang.get("diag_reqStreamURL"));
 			if (StationList.isValidStream(url)) {
-				JOptionPane.showMessageDialog(null, "Stream successfully added");
+				JOptionPane.showMessageDialog(null, Lang.get("diag_addSucc"));
 				StationList.add(url);
 			}
 		}
@@ -150,7 +151,7 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 			RecordingMaster.addStation(rs);
 			
 			moveRec.setEnabled(false);
-			moveRec.setText("Already on list!");
+			moveRec.setText(Lang.get("btn_alreadyThere"));
 			
 			updateExtTable = true;
 			return;

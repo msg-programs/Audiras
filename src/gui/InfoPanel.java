@@ -5,6 +5,7 @@ import java.awt.Font;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import settings.Lang;
 import streamlogic.RadioStation;
 
 public class InfoPanel extends JPanel {
@@ -13,7 +14,7 @@ public class InfoPanel extends JPanel {
 	private JLabel name, rate, genre, format, status;
 
 	public InfoPanel() {
-		JLabel nam = new JLabel("Name");
+		JLabel nam = new JLabel(Lang.get("lbl_name"));
 		nam.setBounds(10, 20, 150, 15);
 		this.add(nam);
 
@@ -22,7 +23,7 @@ public class InfoPanel extends JPanel {
 		this.add(name);
 		name.setFont(new Font(name.getFont().getName(), Font.PLAIN, name.getFont().getSize()));
 
-		JLabel gen = new JLabel("Genre");
+		JLabel gen = new JLabel(Lang.get("lbl_genre"));
 		gen.setBounds(10, 55, 150, 15);
 		this.add(gen);
 
@@ -31,7 +32,7 @@ public class InfoPanel extends JPanel {
 		this.add(genre);
 		genre.setFont(new Font(genre.getFont().getName(), Font.PLAIN, genre.getFont().getSize()));
 
-		JLabel rat = new JLabel("Bitrate");
+		JLabel rat = new JLabel(Lang.get("lbl_bitrate"));
 		rat.setBounds(10, 90, 150, 15);
 		this.add(rat);
 
@@ -40,7 +41,7 @@ public class InfoPanel extends JPanel {
 		this.add(rate);
 		rate.setFont(new Font(rate.getFont().getName(), Font.PLAIN, rate.getFont().getSize()));
 
-		JLabel form = new JLabel("Format");
+		JLabel form = new JLabel(Lang.get("lbl_format"));
 		form.setBounds(90, 90, 150, 15);
 		this.add(form);
 
@@ -49,7 +50,7 @@ public class InfoPanel extends JPanel {
 		this.add(format);
 		format.setFont(new Font(format.getFont().getName(), Font.PLAIN, format.getFont().getSize()));
 
-		JLabel stat = new JLabel("Status");
+		JLabel stat = new JLabel(Lang.get("lbl_status"));
 		stat.setBounds(10, 125, 150, 15);
 		this.add(stat);
 

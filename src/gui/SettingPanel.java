@@ -11,13 +11,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import settings.Lang;
 import settings.Settings;
+import streamlogic.RecordingMaster;
 
 public class SettingPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
-	public JCheckBox recOnBoot, instRec, showWindow;
+	public JCheckBox startOnBoot, startRecs, showWindow;
 	public JTextField block;
 	public JComboBox<String> mode;
 
@@ -28,25 +30,25 @@ public class SettingPanel extends JPanel implements ActionListener {
 	public SettingPanel() {
 		this.setLayout(null);
 
-		recOnBoot = new JCheckBox();
-		recOnBoot.setText("Start recording on startup");
-		recOnBoot.setBounds(10, 10, 260, 15);
-		recOnBoot.setSelected(Settings.getBootRec());
-		this.add(recOnBoot);
+		startOnBoot = new JCheckBox();
+		startOnBoot.setText(Lang.get("check_bootStart"));
+		startOnBoot.setBounds(10, 10, 260, 15);
+		startOnBoot.setSelected(Settings.doStartOnBoot());
+		this.add(startOnBoot);
 
 		showWindow = new JCheckBox();
-		showWindow.setText("Show window on startup");
+		showWindow.setText(Lang.get("check_startWin"));
 		showWindow.setBounds(10, 30, 350, 15);
-		showWindow.setSelected(Settings.getShowWin());
+		showWindow.setSelected(Settings.doShowWin());
 		this.add(showWindow);
 
-		instRec = new JCheckBox();
-		instRec.setText("Start recording on startup");
-		instRec.setBounds(10, 50, 350, 15);
-		instRec.setSelected(Settings.getInstRec());
-		this.add(instRec);
+		startRecs = new JCheckBox();
+		startRecs.setText(Lang.get("check_startRec"));
+		startRecs.setBounds(10, 50, 350, 15);
+		startRecs.setSelected(Settings.doStartRec());
+		this.add(startRecs);
 
-		String[] choices = { "Number of songs / stream", "Size of all songs / stream", "Number of all songs recorded", "Size of all songs recorded" };
+		String[] choices = { Lang.get("dd_numPer"),Lang.get("dd_sizePer"),Lang.get("dd_numAll"),Lang.get("dd_sizeAll") };
 
 		mode = new JComboBox<String>(choices);
 		mode.setBounds(10, 75, 250, 20);
@@ -61,7 +63,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 		block.setBounds(265, 75, 50, 20);
 		this.add(block);
 
-		save = new JButton("Save");
+		save = new JButton(Lang.get("btn_save"));
 		save.setBounds(270, 207, 90, 20);
 		this.add(save);
 		save.addActionListener(this);
@@ -76,12 +78,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent ae) {
 
 		if (ae.getSource().equals(save)) {
-			Settings.setBlockMode(mode.getSelectedIndex());
-			Settings.setBlockMax(Float.parseFloat(block.getText()));
-			Settings.setBootRec(recOnBoot.isSelected());
-			Settings.setInstRec(instRec.isSelected());
-			Settings.setShowWin(showWindow.isSelected());
-			Settings.save();
+			save();
 			return;
 		}
 
@@ -91,7 +88,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 				try {
 					size = Float.parseFloat(block.getText());
 				}catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "Invalid float!", "Error",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, Lang.get("err_invFloat"), Lang.get("err"),JOptionPane.ERROR_MESSAGE);
 				}
 				
 				gb.setVisible(true);
@@ -103,7 +100,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 				try {
 					num = Integer.parseInt(block.getText());
 				}catch (NumberFormatException e) {
-					JOptionPane.showMessageDialog(null, "Invalid integer!", "Error",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,  Lang.get("err_invInt"),Lang.get("err"),JOptionPane.ERROR_MESSAGE);
 				}
 				
 				gb.setVisible(false);
@@ -112,7 +109,16 @@ public class SettingPanel extends JPanel implements ActionListener {
 			}
 			// baba is you
 		}
-		
+	}
+	
+	public void save() {
+		Settings.setBlockMode(mode.getSelectedIndex());
+		Settings.setBlockMax(Float.parseFloat(block.getText()));
+		Settings.setStartOnBoot(startOnBoot.isSelected());
+		Settings.setStartRec(startRecs.isSelected());
+		Settings.setShowWin(showWindow.isSelected());
+		RecordingMaster.doRecalcAll();
+		Settings.save();
 	}
 	
 }

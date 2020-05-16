@@ -6,6 +6,8 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import settings.Lang;
+
 public class StreamMeta {
 
 	public String name = "[Error]";
@@ -36,20 +38,20 @@ public class StreamMeta {
 
 		} catch (IOException e) {
 //			System.err.println(url + " doesn't seem to be valid or timed out!");
-			error = "Connection error!";
+			error = Lang.get("err_conn");
 			return;
 		}
 
 		// god dammit
 		try {
 			if (res.get("Content-Type") == null) {
-				format = res.get("content-type").get(0);
+				format = res.get("content-type").get(0); // reeeeee
 			} else {
 				format = res.get("Content-Type").get(0);
 			}
 
 			if (!format.equals("audio/mpeg")) {
-				error = "Format not (yet) supported!";
+				error = Lang.get("err_unsuppForm");
 				return;
 			}
 
@@ -59,13 +61,13 @@ public class StreamMeta {
 
 		} catch (IndexOutOfBoundsException e) {
 //			System.err.println("Error while parsing metadata!");
-			error = "Invalid metadata!";
+			error = Lang.get("err_invMeta");
 		}
 
 		try {
 			metaInt = Integer.parseInt(res.get("icy-metaint").get(0));
 		} catch (NumberFormatException e) {
-			error = "No metaint was send!";
+			error = Lang.get("err_noMetaInt");
 		}
 	}
 
