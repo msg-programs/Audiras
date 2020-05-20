@@ -51,7 +51,7 @@ public class RadioMain {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				if (win!=null) {
-					win.settings.save(); // ugly change later
+					win.save(); // ugly change later
 				}
 			}
 		});
@@ -66,6 +66,9 @@ public class RadioMain {
 			Image i = null;
 			try {
 				i = ImageIO.read(Settings.ICO);
+				if (i==null) {
+					throw new IOException("ico==null!");
+				}
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(null, Lang.get("err_noTrayIco"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
@@ -97,6 +100,7 @@ public class RadioMain {
 
 			ti = new TrayIcon(i, "Audiras", popup);
 			ti.addActionListener(al);
+			ti.setImageAutoSize(true);
 
 			try {
 				t.add(ti);
@@ -107,6 +111,10 @@ public class RadioMain {
 		}
 	}
 
+	public static void update() {
+		win.update();
+	}
+	
 	public static void test() throws MalformedURLException, IOException {
 		String url = "url here";
 
