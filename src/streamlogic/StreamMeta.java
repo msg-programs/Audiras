@@ -10,7 +10,7 @@ import settings.Lang;
 
 public class StreamMeta {
 
-	public String name = "[Error]";
+	public String name = String.format("[%s]", Lang.get("err"));
 	public String genre = "???";
 	public String bitrate = "???";
 	public String url = "???";
