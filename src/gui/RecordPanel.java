@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -124,6 +125,11 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 
+		updateGUI();
+
+	}
+
+	public void updateGUI() {
 		int rowNr = table.getSelectedRow();
 
 		if (rowNr < 0) {
@@ -132,11 +138,16 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 		RadioStation rs = RecordingMaster.getStation(rowNr);
 
 		recToggle.setEnabled(true);
+		dispR.updateText(rs);
 
 		if (rs != null) {
 			rs.recalcFull();
 			recToggle.setText(rs.getButtonStatus());
 			delete.setEnabled(true);
+			if (rs.hasError) {
+				recToggle.setText(Lang.get("btn_startRec"));
+				recToggle.setEnabled(false);
+			}
 
 			if (rs.isFull) {
 				recToggle.setEnabled(false);
@@ -145,48 +156,32 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 			recToggle.setEnabled(false);
 			delete.setEnabled(false);
 		}
-		dispR.updateText(rs);
-
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
 		if (ae.getSource().equals(masOn)) {
 			RecordingMaster.setAllOn();
-			return;
-		}
+		} else 
 		if (ae.getSource().equals(masOff)) {
 			RecordingMaster.setAllOff();
 			return;
-		}
+		} else 
 		if (ae.getSource().equals(recToggle)) {
 			RecordingMaster.toggle(table.getSelectedRow());
-		}
+		} else
 
-		int rowNr = table.getSelectedRow();
 		if (ae.getSource().equals(delete)) {
+			int rowNr = table.getSelectedRow();
 
 			RadioStation rs = RecordingMaster.getStation(rowNr);
 			rs.stopRec();
 			RecordingMaster.remove(rs);
 
 			model.removeRow(rowNr);
-
-			return;
+			
 		}
-
-		RadioStation rs = RecordingMaster.getStation(rowNr);
-
-		dispR.updateText(rs);
-		if (rs != null) {
-			recToggle.setText(rs.getButtonStatus());
-			if (rs.hasError) {
-				recToggle.setText(Lang.get("btn_startRec"));
-				recToggle.setEnabled(true);
-			}
-		} else {
-			recToggle.setEnabled(false);
-		}
-		return;
+		
+		updateGUI();
 	}
 }
