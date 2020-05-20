@@ -20,11 +20,13 @@ public class Window extends JFrame implements ChangeListener {
 
 	private static final Dimension DIM = new Dimension(387, 300);
 
-	public SettingPanel settings;
+	private SettingPanel settings;
 	private RecordPanel record;
 	private ListPanel list;
 
 	private JTabbedPane tabs;
+
+	private int lastIdx = 0;
 
 	public Window() {
 		super("Audiras");
@@ -66,11 +68,23 @@ public class Window extends JFrame implements ChangeListener {
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		if (list.updateExtTable) {
+		int idx = tabs.getSelectedIndex();
+		if (idx == 0 && list.updateExtTable) {
 			record.populateTable();
 			list.updateExtTable = false;
 		}
+		if (lastIdx == 2 && tabs.getSelectedIndex() != 2) {
+			settings.save();
+		}
+		lastIdx = idx;
+	}
+
+	public void save() {
 		settings.save();
+	}
+
+	public void update() {
+		record.updateGUI();
 	}
 
 }
