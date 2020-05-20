@@ -65,7 +65,7 @@ public class InfoPanel extends JPanel {
 		if (rs != null) {
 			format.setText(rs.meta.format);
 			name.setText(rs.meta.name);
-			rate.setText(rs.meta.bitrate);
+			rate.setText(rs.meta.bitrate + " kbit/s");
 			genre.setText(rs.meta.genre);
 			status.setText(rs.getStatus());
 		} else {
