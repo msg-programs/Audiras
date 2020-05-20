@@ -2,8 +2,11 @@ package settings;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.HashMap;
 
 public class Lang {
@@ -17,10 +20,10 @@ public class Lang {
 		addDefaultStrings();
 
 		try {
-			BufferedReader bfr = new BufferedReader(new FileReader(LANG));
+			BufferedReader bfr = new BufferedReader(new InputStreamReader(new FileInputStream(LANG), "UTF8"));
 
 			while ((line = bfr.readLine()) != null) {
-				if (line.startsWith("//")) {
+				if (line.startsWith("//") || line.length() < 3) {
 					continue;
 				}
 				trans.put(line.split("=")[0], line.split("=")[1]);
@@ -30,9 +33,13 @@ public class Lang {
 		} catch (IOException e) {
 			System.err.println("Something went wrong while reading the language file:");
 			e.printStackTrace();
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.err.println(line);
+			System.exit(0);
 		}
 
 	}
+
 
 	public static String get(String key) {
 		String r = trans.get(key);
@@ -54,11 +61,10 @@ public class Lang {
 		trans.put("err_conn", "Connection error!");
 		trans.put("err_unsuppForm", "Format not supported!");
 		trans.put("err_invMeta", "Invalid metadata!");
-		trans.put("err_noMetaInt", "No metaint was send!");
+		trans.put("err_noMetaInt", "Can't record this stream! (No metainterval was send)");
 		trans.put("err_iniFile", "Can't create settings save file!");
-		trans.put("err_noStreamFile",
-				"Stream list file not found!\nPlease download the streamfile and try again or enter streams yourself.");
-		trans.put("err_streamFileRead", "Something went wrong while reading the stream file!");
+		trans.put("err_noStreamFile", "Stream list file not found!");
+		trans.put("err_streamFileRead", "Error while reading the stream list!");
 		trans.put("err_streamAdd", "Error while adding stream!");
 		trans.put("err_createDir", "Couldn't create the directory %s!");
 
@@ -71,6 +77,7 @@ public class Lang {
 		trans.put("lbl_bitrate", "Bitrate");
 		trans.put("lbl_status", "Status");
 		trans.put("lbl_format", "Format");
+		trans.put("lbl_currDir", "Currently");
 
 		// checkboxes
 		trans.put("check_bootStart", "Start program on OS startup");
@@ -93,6 +100,7 @@ public class Lang {
 		trans.put("btn_recordStream", "Record Stream");
 		trans.put("btn_addNewStream", "Add new");
 		trans.put("btn_alreadyThere", "Already on list!");
+		trans.put("btn_dirchange", "Change recording directory");
 
 		// status
 		trans.put("stat_idle", "Idle");
@@ -102,11 +110,6 @@ public class Lang {
 		// dialog
 		trans.put("diag_reqStreamURL", "Enter new stream's URL");
 		trans.put("diag_addSucc", "Stream successfully added");
-
-		// radiostation
-		trans.put("rs_full", "Hit the limit");
-		trans.put("rs_recording", "Recording");
-		trans.put("rs_idle", "Idle");
 
 		// tabs in window
 		trans.put("tab_record", "Record");
