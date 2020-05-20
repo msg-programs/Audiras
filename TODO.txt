@@ -1,17 +1,11 @@
 == hi prio TOOD
-kbit string to bitrate
 
 == low prio TODO
-SettingPanel:	Add target recording dir chooser
-				recalc blocking on setting change
-RecordPanel: 	update on stopped recording
-Lang: 			add default settings	
-RecordingMaster:ask if recording should be deleted, warn bcs size not monitored anymore
-RadioMain: 		trayicon image not showing ??
-				fix settings save hack
-Window: 		only save/update on right tab change, not always
 
 == next update todo
+REDO GUI
 ListPanel:		add search bar
-
-
+Lang:			multiline string support
+SettingPanel:	split: recording / program settings		
+				language switcher
+RecordPanel: 	update on stopped recording less ugly
