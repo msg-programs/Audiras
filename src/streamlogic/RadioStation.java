@@ -32,7 +32,7 @@ public class RadioStation {
 			hasError = true;
 		}
 		
-		streamdir = new File(Settings.getStreamDir() + "\\" + meta.name);
+		resetStreamDir();
 
 		doDirScan();
 
@@ -130,5 +130,10 @@ public class RadioStation {
 			return Lang.get("btn_stopRec");
 		}
 		return null;
+	}
+
+	public void resetStreamDir() {
+		streamdir = new File(Settings.getStreamDir() + "\\" + meta.name);
+		
 	}
 }
