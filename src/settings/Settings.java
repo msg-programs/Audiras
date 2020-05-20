@@ -117,7 +117,7 @@ public class Settings {
 
 	public static String getStreamDir() {
 		if (!settings.containsKey("target_dir")) {
-			settings.put("target_dir", THIS_DIR.getAbsolutePath() + "/Recordings");
+			settings.put("target_dir", THIS_DIR.getAbsolutePath() + "\\Recordings");
 		}
 
 		return settings.get("target_dir");
@@ -199,6 +199,10 @@ public class Settings {
 		} else {
 			return Integer.parseInt(res);
 		}
+	}
+
+	public static void setStreamDir(String path) {
+		settings.put("target_dir", path +"\\Recordings");
 	}
 
 }

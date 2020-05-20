@@ -72,12 +72,17 @@ public class RecordingMaster {
 		stations.remove(rs);
 	}
 
-	public static void doRecalcAll() {
+	public static void recalcAll() {
 		for (RadioStation rs: stations)  {
 			rs.doDirScan();
 			rs.recalcFull();
 		}
-		
+	}
+	
+	public static void resetStreamDirs() {
+		for (RadioStation rs: stations)  {
+			rs.resetStreamDir();
+		}
 	}
 
 }
