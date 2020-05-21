@@ -2,9 +2,11 @@ package settings;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -34,7 +36,7 @@ public class Settings {
 		try {
 			INI.createNewFile();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, Lang.get("err_iniFile"), Lang.get("err"),JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, Lang.get("err_iniFile"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 
@@ -80,13 +82,14 @@ public class Settings {
 					save();
 				}
 			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(null, Lang.get("err_iniFile"), Lang.get("err"),JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, Lang.get("err_iniFile"), Lang.get("err"),
+						JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 			}
 
 			e.printStackTrace();
 		}
-		
+
 		File astart = new File(
 				System.getenv("appdata") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\audiras.bat");
 
@@ -104,7 +107,7 @@ public class Settings {
 				pw.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, Lang.get("err_astart"),Lang.get("err"),JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, Lang.get("err_astart"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
 
@@ -202,7 +205,31 @@ public class Settings {
 	}
 
 	public static void setStreamDir(String path) {
-		settings.put("target_dir", path +"\\Recordings");
+		settings.put("target_dir", path + "\\Recordings");
+	}
+
+	public static String getLang() {
+		if (!settings.containsKey("lang")) {
+			settings.put("lang", "eng");
+		}
+		return settings.get("lang");
+	}
+
+	public static void setLang(String lang) {
+		settings.put("lang", lang);
+	}
+
+	public static String getLangName() {
+		try {
+			BufferedReader bfr = new BufferedReader(new InputStreamReader(new FileInputStream(Lang.LANG), "UTF8"));
+			String name = bfr.readLine();
+			bfr.close();
+			return name.split(":")[1].trim();
+		} catch (IOException e) {
+			System.err.println("Something went wrong while reading the language file:");
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

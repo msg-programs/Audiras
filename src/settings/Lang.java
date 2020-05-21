@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class Lang {
 
-	private static final File LANG = new File(Settings.THIS_DIR + "/data/lang.txt");
+	static final File LANG = new File(Settings.THIS_DIR + "/data/lang_" + Settings.getLang() + ".txt");
 	private static HashMap<String, String> trans = new HashMap<>();
 
 	public static void init() {
@@ -66,6 +66,8 @@ public class Lang {
 		trans.put("err_noStreamFile", "Stream list file not found!");
 		trans.put("err_streamFileRead", "Error while reading the stream list!");
 		trans.put("err_streamAdd", "Error while adding stream!");
+		trans.put("err_invDir", "Can't use this directory!");
+		trans.put("err_invLangFile", "Not a language file!");
 		trans.put("err_createDir", "Couldn't create the directory %s!");
 
 		// labels
@@ -77,7 +79,7 @@ public class Lang {
 		trans.put("lbl_bitrate", "Bitrate");
 		trans.put("lbl_status", "Status");
 		trans.put("lbl_format", "Format");
-		trans.put("lbl_currDir", "Currently");
+		trans.put("lbl_curr", "Currently");
 
 		// checkboxes
 		trans.put("check_bootStart", "Start program on OS startup");
@@ -101,6 +103,7 @@ public class Lang {
 		trans.put("btn_addNewStream", "Add new");
 		trans.put("btn_alreadyThere", "Already on list!");
 		trans.put("btn_dirchange", "Change recording directory");
+		trans.put("btn_langchange", "Change language");
 
 		// status
 		trans.put("stat_idle", "Idle");
@@ -108,8 +111,10 @@ public class Lang {
 		trans.put("stat_full", "Limit hit!");
 
 		// dialog
+		trans.put("msg", "Info");
 		trans.put("diag_reqStreamURL", "Enter new stream's URL");
 		trans.put("diag_addSucc", "Stream successfully added");
+		trans.put("diag_requireRestart", "Restart required, closing program.");
 
 		// tabs in window
 		trans.put("tab_record", "Record");

@@ -3,6 +3,7 @@ package gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FilenameFilter;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -12,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileFilter;
 
 import settings.Lang;
 import settings.Settings;
@@ -25,9 +27,9 @@ public class SettingPanel extends JPanel implements ActionListener {
 	private JTextField block;
 	private JComboBox<String> mode;
 
-	private JButton save, dirchange;
+	private JButton save, dirchange, langchange;
 
-	private JLabel gb, dir;
+	private JLabel gb, dir, lang;
 
 	public SettingPanel() {
 		this.setLayout(null);
@@ -80,9 +82,18 @@ public class SettingPanel extends JPanel implements ActionListener {
 		this.add(dirchange);
 		dirchange.addActionListener(this);
 
-		dir = new JLabel(Lang.get("lbl_currDir") + ": " + Settings.getStreamDir());
+		dir = new JLabel(Lang.get("lbl_curr") + ": " + Settings.getStreamDir());
 		dir.setBounds(10, 130, 350, 20);
 		this.add(dir);
+		
+		langchange = new JButton(Lang.get("btn_langchange"));
+		langchange.setBounds(10, 170, 200, 20);
+		this.add(langchange);
+		langchange.addActionListener(this);
+
+		lang = new JLabel(Lang.get("lbl_curr") + ": " + Settings.getLangName());
+		lang.setBounds(10, 190, 350, 20);
+		this.add(lang);
 	}
 
 	@Override
@@ -136,10 +147,29 @@ public class SettingPanel extends JPanel implements ActionListener {
 			File f = jfc.getSelectedFile();
 			if (f != null && f.canRead() && f.canWrite()) {
 				Settings.setStreamDir(f.getAbsolutePath());
-				dir.setText(Lang.get("lbl_currDir") + ": " + Settings.getStreamDir());
+				dir.setText(Lang.get("lbl_curr") + ": " + Settings.getStreamDir());
 				RecordingMaster.resetStreamDirs();
 			} else {
 				JOptionPane.showMessageDialog(null, Lang.get("err_invDir"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		
+		if (ae.getSource().equals(langchange)) {
+			JFileChooser jfc = new JFileChooser();
+			jfc.setCurrentDirectory(Settings.THIS_DIR);
+			int ret = jfc.showOpenDialog(null);
+
+			if (ret != JFileChooser.APPROVE_OPTION) {
+				return;
+			}
+
+			File f = jfc.getSelectedFile();
+			if (f != null && f.canRead() && f.getName().matches("lang_.{3}\\.txt")) {
+				Settings.setLang(f.getName().substring(5,8)); // lang_xxx.txt
+				JOptionPane.showMessageDialog(null, Lang.get("diag_requireRestart"), Lang.get("msg"), JOptionPane.INFORMATION_MESSAGE);
+				System.exit(0);
+			} else {
+				JOptionPane.showMessageDialog(null, Lang.get("err_invLangFile"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}
