@@ -68,11 +68,11 @@ public class Window extends JFrame implements ChangeListener {
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		int idx = tabs.getSelectedIndex();
-		if (idx == 0 && list.updateExtTable) {
+		if (list.updateExtTable) {
 			record.populateTable();
 			list.updateExtTable = false;
 		}
+		int idx = tabs.getSelectedIndex();
 		if (lastIdx == 2 && tabs.getSelectedIndex() != 2) {
 			settings.save();
 		}

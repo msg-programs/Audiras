@@ -46,9 +46,7 @@ public class RadioMain {
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				if (win!=null) {
-					win.save(); // ugly change later
-				}
+				Settings.save();
 			}
 		});
 	}
