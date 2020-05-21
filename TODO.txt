@@ -4,6 +4,8 @@
 
 == next update todo
 REDO GUI
+REDO SAVE
+refactor window
 ListPanel:		add search bar
 Lang:			multiline string support
 SettingPanel:	split: recording / program settings		
