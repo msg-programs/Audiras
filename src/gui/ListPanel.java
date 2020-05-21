@@ -118,7 +118,7 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 			moveRec.setText(Lang.get("btn_alreadyThere"));
 		} else {
 			moveRec.setEnabled(true);
-			moveRec.setText(Lang.get("btn_addNewStream"));
+			moveRec.setText(Lang.get("btn_recordStream"));
 		}
 		
 
