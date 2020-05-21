@@ -30,13 +30,9 @@ public class RadioMain {
 
 	public static void main(String[] args) {
 		Settings.init();
-//		System.out.println("s init");
 		Lang.init();
-//		System.out.println("l init");
 		StationList.init();
-//		System.out.println("sl init");
 		RecordingMaster.init();
-//		System.out.println("rm init");
 
 		initTrayIcon();
 
