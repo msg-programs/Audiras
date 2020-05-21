@@ -1,0 +1,75 @@
+// Audiras-Sprachdatei: Deutsch
+
+// errors
+err=Fehler
+err_astart=Fehler beim Erstellen der Autostart-Datei!
+err_noTrayIco=Konnte Taskleisten-Icon nicht laden!
+err_addTrayIcon=Konnte Taskleisten-Icon nicht erstellen!
+err_invFloat=Keine Kommazahl!
+err_invInt=Keine Ganzzahl!
+err_conn=Verbindungsfehler
+err_unsuppForm=Format nicht unterstützt!
+err_invMeta=Invalide Metadaten!
+err_noMetaInt=Kann diesen Stream nicht aufnehmen! (Kein Metaintervall gesendet)
+err_iniFile=Kann Speicherdatei nicht erstellen!
+err_noStreamFile=Streamliste nicht gefunden!
+err_streamFileRead=Fehler beim Lesen der Streamliste!
+err_streamAdd=Fehler beim Hinzufügen des Streams!
+err_invDir=Kann dieses Verzeichnis nicht verwenden!
+err_invLangFile=Keine Sprachdatei!
+err_createDir=Konnte Verzeichnis %s nicht erstellen!
+
+// labels
+lbl_streams=Streams
+lbl_streamInfo=Stream-Info
+lbl_streamList=Streamliste
+lbl_name=Name
+lbl_genre=Genre
+lbl_bitrate=Bitrate
+lbl_status=Status
+lbl_format=Format
+lbl_curr=Derzeit
+
+// checkboxes
+check_bootStart=Programm beim Hochfahren starten
+check_startWin=Fenster beim Start anzeigen
+check_startRec=Aufnahme beim Start beginnen
+
+// dropdown choices
+dd_numPer=Anzahl aller Aufnahmen pro Stream
+dd_sizePer=Größe aller Aufnahmen pro Stream
+dd_numAll=Anzahl aller Aufnahmen
+dd_sizeAll=Größe aller Aufnahmen
+
+// buttons
+btn_masterStart=Alle starten
+btn_masterStop=Alle stoppen
+btn_deleteStream=Stream entfernen
+btn_startRec=Aufnahme starten
+btn_stopRec=Aufnahme stoppen
+btn_save=Speichern
+btn_recordStream=Stream aufnehmen
+btn_addNewStream=Neuer Stream
+btn_alreadyThere=Bereits auf der Liste!
+btn_dirchange=Aufnahmeverzeichnis ändern
+btn_langchange=Sprache ändern
+
+// status
+stat_idle=Bereit
+stat_recording=Nimmt auf
+stat_full=Limit erreicht!
+
+// dialog
+msg=Info
+diag_reqStreamURL=URL des neuen Streams hinzugefügt!
+diag_addSucc=Stream erfolgreich hinzugefügt!
+diag_requireRestart=Neustart nötig, Programm schließt sich.
+
+// tabs in window
+tab_record=Aufnehmen
+tab_list=Durchsuchen
+tab_settings=Einstellungen
+
+// tray icon
+ti_open=Fenster öffnen
+ti_exit=Audiras beenden

@@ -1,0 +1,75 @@
+// Audiras language file: English
+
+// errors
+err=Error
+err_astart=Error while creating autostart file!
+err_noTrayIco=Couldn't load the tray icon image!
+err_addTrayIcon=Couldn't create the tray icon!
+err_invFloat=Invalid float!
+err_invInt=Invalid integer!
+err_conn=Connection error
+err_unsuppForm=Format not supported!
+err_invMeta=Invalid metadata!
+err_noMetaInt=Can't record this stream! (No metainterval was send)
+err_iniFile=Can't create settings save file!
+err_noStreamFile=Stream list file not found!
+err_streamFileRead=Error while reading the stream list!
+err_streamAdd=Error while adding stream!
+err_invDir=Can't use this directory!
+err_invLangFile=Not a language file!
+err_createDir=Couldn't create the directory %s!
+
+// labels
+lbl_streams=Streams
+lbl_streamInfo=Stream info
+lbl_streamList=Stream list
+lbl_name=Name
+lbl_genre=Genre
+lbl_bitrate=Bitrate
+lbl_status=Status
+lbl_format=Format
+lbl_curr=Currently
+
+// checkboxes
+check_bootStart=Start program on OS startup
+check_startWin=Show window on startup
+check_startRec=Start recording on program startup
+
+// dropdown choices
+dd_numPer=Number of songs per stream
+dd_sizePer=Size of all songs per stream
+dd_numAll=Number of all songs recorded
+dd_sizeAll=Size of all songs recorded
+
+// buttons
+btn_masterStart=Start all
+btn_masterStop=Stop all
+btn_deleteStream=Remove stream
+btn_startRec=Start recording
+btn_stopRec=Stop recording
+btn_save=Save
+btn_recordStream=Record Stream
+btn_addNewStream=Add new
+btn_alreadyThere=Already on list!
+btn_dirchange=Change recording directory
+btn_langchange=Change language
+
+// status
+stat_idle=Idle
+stat_recording=Recording
+stat_full=Limit hit!
+
+// dialog
+msg=Info
+diag_reqStreamURL=Enter new stream's URL
+diag_addSucc=Stream successfully added
+diag_requireRestart=Restart required, closing program.
+
+// tabs in window
+tab_record=Record
+tab_list=Browse
+tab_settings=Settings
+
+// tray icon
+ti_open=Open window
+ti_exit=Exit Audiras
