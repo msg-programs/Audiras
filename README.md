@@ -11,6 +11,9 @@
 ## == Needed:  
 * Nothing, Java 13 runtime is bundled with the release.
 
+## == Using:
+* Mp3agic by mpatric, see https://github.com/mpatric/mp3agic and "mp3agic license.txt"
+
 ## == Usage:  
 ### Recorder tab
 * Left side: List of all streams ready to record, master buttons to start/stop all recorders.
