@@ -1,4 +1,4 @@
-package gui;
+package com.msgprograms.audiras.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,9 +15,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
 
-import settings.Lang;
-import settings.Settings;
-import streamlogic.RecordingMaster;
+import com.msgprograms.audiras.settings.FileConst;
+import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.settings.Settings;
+import com.msgprograms.audiras.streamlogic.RecordingMaster;
 
 public class SettingPanel extends JPanel implements ActionListener {
 
@@ -136,7 +137,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 
 		if (ae.getSource().equals(dirchange)) {
 			JFileChooser jfc = new JFileChooser();
-			jfc.setCurrentDirectory(Settings.THIS_DIR);
+			jfc.setCurrentDirectory(FileConst.THIS_DIR);
 			jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			int ret = jfc.showOpenDialog(null);
 
@@ -156,7 +157,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 		
 		if (ae.getSource().equals(langchange)) {
 			JFileChooser jfc = new JFileChooser();
-			jfc.setCurrentDirectory(Settings.THIS_DIR);
+			jfc.setCurrentDirectory(FileConst.THIS_DIR);
 			int ret = jfc.showOpenDialog(null);
 
 			if (ret != JFileChooser.APPROVE_OPTION) {

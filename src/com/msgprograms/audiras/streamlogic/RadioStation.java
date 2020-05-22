@@ -1,4 +1,4 @@
-package streamlogic;
+package com.msgprograms.audiras.streamlogic;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,8 +6,8 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 
-import settings.Lang;
-import settings.Settings;
+import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.settings.Settings;
 
 public class RadioStation {
 

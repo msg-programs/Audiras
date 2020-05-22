@@ -1,4 +1,4 @@
-package streamlogic;
+package com.msgprograms.audiras.streamlogic;
 
 public class BufferQueue {
 

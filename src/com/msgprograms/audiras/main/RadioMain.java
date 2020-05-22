@@ -1,4 +1,4 @@
-package main;
+package com.msgprograms.audiras.main;
 
 import java.awt.AWTException;
 import java.awt.Image;
@@ -8,27 +8,33 @@ import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
-import java.util.List;
-import java.util.Map;
+import java.net.URLDecoder;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-import gui.Window;
-import settings.Lang;
-import settings.Settings;
-import streamlogic.RecordingMaster;
-import streamlogic.StationList;
+import com.msgprograms.audiras.gui.Window;
+import com.msgprograms.audiras.settings.FileConst;
+import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.settings.Settings;
+import com.msgprograms.audiras.streamlogic.RecordingMaster;
+import com.msgprograms.audiras.streamlogic.StationList;
 
 public class RadioMain {
 
 	public static Window win = null;
 
 	public static void main(String[] args) {
+		FileConst.init();
 		Settings.init();
 		Lang.init();
 		StationList.init();
@@ -59,7 +65,7 @@ public class RadioMain {
 
 			Image i = null;
 			try {
-				i = ImageIO.read(Settings.ICO);
+				i = ImageIO.read(FileConst.ICO_FILE);
 				if (i==null) {
 					throw new IOException("ico==null!");
 				}
@@ -107,24 +113,5 @@ public class RadioMain {
 
 	public static void update() {
 		win.update();
-	}
-	
-	public static void test() throws MalformedURLException, IOException {
-		String url = "url here";
-
-		URLConnection conn;
-		conn = new URL(url).openConnection();
-		conn.setRequestProperty("Icy-MetaData", "1");
-		conn.setRequestProperty("Connection", "close");
-		conn.setRequestProperty("Accept", null);
-		conn.connect();
-
-		Map<String, List<String>> hmap = conn.getHeaderFields();
-		for (String s : hmap.keySet()) {
-			System.out.print(s + ": ");
-			hmap.get(s).forEach(val -> System.err.println(val));
-			System.out.println();
-		}
-		System.exit(0);
 	}
 }

@@ -1,4 +1,4 @@
-package settings;
+package com.msgprograms.audiras.settings;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class Lang {
 
-	static final File LANG = new File(Settings.THIS_DIR + "/data/lang_" + Settings.getLang() + ".txt");
+	static final File LANG = new File(FileConst.THIS_DIR + "/data/lang_" + Settings.getLang() + ".txt");
 	private static HashMap<String, String> trans = new HashMap<>();
 
 	public static void init() {
@@ -69,6 +69,8 @@ public class Lang {
 		trans.put("err_invDir", "Can't use this directory!");
 		trans.put("err_invLangFile", "Not a language file!");
 		trans.put("err_createDir", "Couldn't create the directory %s!");
+		trans.put("err_whereami", "Can't find current path name!");
+		trans.put("err_invStream", "Can't record this stream!");
 
 		// labels
 		trans.put("lbl_streams", "Streams");

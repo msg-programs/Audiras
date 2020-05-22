@@ -1,12 +1,12 @@
-package gui;
+package com.msgprograms.audiras.gui;
 
 import java.awt.Font;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import settings.Lang;
-import streamlogic.RadioStation;
+import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.streamlogic.RadioStation;
 
 public class InfoPanel extends JPanel {
 

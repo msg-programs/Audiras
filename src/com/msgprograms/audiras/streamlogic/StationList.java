@@ -1,4 +1,4 @@
-package streamlogic;
+package com.msgprograms.audiras.streamlogic;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,24 +10,24 @@ import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-import settings.Lang;
-import settings.Settings;
+import com.msgprograms.audiras.settings.FileConst;
+import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.settings.Settings;
 
 public class StationList {
 
 	public static ArrayList<RadioStation> stations = new ArrayList<>();
-	private static final File STREAMFILE = new File(Settings.THIS_DIR + "/data/streams.txt");
 
-	// load streams saved in file STREAMFILE
+	// load streams saved in file FileConst.LIST_FILE
 	public static void init() {
 
-		if (!STREAMFILE.exists()) {
+		if (!FileConst.LIST_FILE.exists()) {
 			JOptionPane.showMessageDialog(null, Lang.get("err_noStreamFile"), Lang.get("err"),
 					JOptionPane.ERROR_MESSAGE);
 		} else {
 
 			try {
-				BufferedReader br = new BufferedReader(new FileReader(STREAMFILE));
+				BufferedReader br = new BufferedReader(new FileReader(FileConst.LIST_FILE));
 				String line;
 
 				int i = 0;
@@ -60,10 +60,10 @@ public class StationList {
 		}
 	}
 
-	// add inputted station to list of radiostations and the file STREAMFILE
+	// add inputted station to list of radiostations and the file FileConst.LIST_FILE
 	public static void add(String s) {
 		try {
-			Files.write(STREAMFILE.toPath(), new String(s + "\n").getBytes(), StandardOpenOption.APPEND);
+			Files.write(FileConst.LIST_FILE.toPath(), new String(s + "\n").getBytes(), StandardOpenOption.APPEND);
 			RadioStation rs = new RadioStation(s, stations.size());
 			stations.add(rs);
 		} catch (IOException e) {

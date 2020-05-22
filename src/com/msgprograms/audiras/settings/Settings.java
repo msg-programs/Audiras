@@ -1,4 +1,4 @@
-package settings;
+package com.msgprograms.audiras.settings;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,18 +13,13 @@ import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
-import streamlogic.RadioStation;
-import streamlogic.RecordingMaster;
+import com.msgprograms.audiras.main.RadioMain;
+import com.msgprograms.audiras.streamlogic.RadioStation;
+import com.msgprograms.audiras.streamlogic.RecordingMaster;
 
 public class Settings {
 
 	private static HashMap<String, String> settings = new HashMap<>();
-
-	public static final File THIS_DIR = new File(
-			ClassLoader.getSystemClassLoader().getResource(".").getPath().replaceAll("%20", " "));
-
-	private static final File INI = new File(THIS_DIR + "/data/settings.ini");
-	public static final File ICO = new File(THIS_DIR + "/data/icon.png");
 
 	public static final int NUM_PER = 0;
 	public static final int SIZE_PER = 1;
@@ -34,14 +29,14 @@ public class Settings {
 	public static void init() {
 
 		try {
-			INI.createNewFile();
+			FileConst.INI_FILE.createNewFile();
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, Lang.get("err_iniFile"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
 
 		try {
-			BufferedReader bfr = new BufferedReader(new FileReader(INI));
+			BufferedReader bfr = new BufferedReader(new FileReader(FileConst.INI_FILE));
 
 			String line;
 			while ((line = bfr.readLine()) != null) {
@@ -57,7 +52,7 @@ public class Settings {
 
 	public static void save() {
 		try {
-			PrintStream out = new PrintStream(INI);
+			PrintStream out = new PrintStream(FileConst.INI_FILE);
 
 			for (String key : settings.keySet()) {
 				if (!key.equals("num_streams") && !key.contains("station_")) {
@@ -78,7 +73,7 @@ public class Settings {
 			out.close();
 		} catch (Exception e) {
 			try {
-				if (INI.createNewFile()) {
+				if (FileConst.INI_FILE.createNewFile()) {
 					save();
 				}
 			} catch (IOException e1) {
@@ -102,7 +97,7 @@ public class Settings {
 				PrintWriter pw = new PrintWriter(astart);
 
 				pw.println("@echo off");
-				pw.println("javaw -jar \"" + THIS_DIR.getAbsolutePath() + "\\Audiras.jar\"");
+				pw.println("javaw -jar \"" + FileConst.THIS_DIR.getAbsolutePath() + "\\Audiras.jar\"");
 
 				pw.close();
 			} catch (FileNotFoundException e) {
@@ -120,7 +115,7 @@ public class Settings {
 
 	public static String getStreamDir() {
 		if (!settings.containsKey("target_dir")) {
-			settings.put("target_dir", THIS_DIR.getAbsolutePath() + "\\Recordings");
+			settings.put("target_dir", FileConst.THIS_DIR.getAbsolutePath() + "\\Recordings");
 		}
 
 		return settings.get("target_dir");

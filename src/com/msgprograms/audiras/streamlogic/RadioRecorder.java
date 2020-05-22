@@ -1,4 +1,4 @@
-package streamlogic;
+package com.msgprograms.audiras.streamlogic;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,8 +13,7 @@ import javax.swing.JOptionPane;
 
 import com.mpatric.mp3agic.ID3v1Tag;
 import com.mpatric.mp3agic.Mp3File;
-
-import settings.Lang;
+import com.msgprograms.audiras.settings.Lang;
 
 public class RadioRecorder extends Thread {
 

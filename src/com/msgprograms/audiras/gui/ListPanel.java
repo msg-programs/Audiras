@@ -1,4 +1,4 @@
-package gui;
+package com.msgprograms.audiras.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,10 +16,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import settings.Lang;
-import streamlogic.RadioStation;
-import streamlogic.RecordingMaster;
-import streamlogic.StationList;
+import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.streamlogic.RadioStation;
+import com.msgprograms.audiras.streamlogic.RecordingMaster;
+import com.msgprograms.audiras.streamlogic.StationList;
 
 public class ListPanel extends JPanel implements ActionListener, ListSelectionListener {
 
@@ -132,8 +132,10 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 		if (ae.getSource().equals(addS)) {
 			String url = (String) JOptionPane.showInputDialog(null, Lang.get("diag_reqStreamURL"));
 			if (StationList.isValidStream(url)) {
-				JOptionPane.showMessageDialog(null, Lang.get("diag_addSucc"));
+				JOptionPane.showMessageDialog(null, Lang.get("diag_addSucc"), Lang.get("msg"), JOptionPane.INFORMATION_MESSAGE);
 				StationList.add(url);
+			} else {
+				JOptionPane.showMessageDialog(null, Lang.get("err_invStream"), Lang.get("err"),JOptionPane.ERROR_MESSAGE );
 			}
 		}
 

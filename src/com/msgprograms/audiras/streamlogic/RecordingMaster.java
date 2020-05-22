@@ -1,8 +1,8 @@
-package streamlogic;
+package com.msgprograms.audiras.streamlogic;
 
 import java.util.ArrayList;
 
-import settings.Settings;
+import com.msgprograms.audiras.settings.Settings;
 
 public class RecordingMaster {
 

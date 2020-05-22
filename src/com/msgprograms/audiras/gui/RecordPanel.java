@@ -1,4 +1,4 @@
-package gui;
+package com.msgprograms.audiras.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,9 +16,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import settings.Lang;
-import streamlogic.RadioStation;
-import streamlogic.RecordingMaster;
+import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.streamlogic.RadioStation;
+import com.msgprograms.audiras.streamlogic.RecordingMaster;
 
 public class RecordPanel extends JPanel implements ActionListener, ListSelectionListener {
 

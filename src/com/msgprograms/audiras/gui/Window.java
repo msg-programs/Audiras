@@ -1,4 +1,4 @@
-package gui;
+package com.msgprograms.audiras.gui;
 
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
@@ -10,9 +10,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import main.RadioMain;
-import settings.Lang;
-import settings.Settings;
+import com.msgprograms.audiras.main.RadioMain;
+import com.msgprograms.audiras.settings.FileConst;
+import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.settings.Settings;
 
 public class Window extends JFrame implements ChangeListener {
 
@@ -30,7 +31,7 @@ public class Window extends JFrame implements ChangeListener {
 
 	public Window() {
 		super("Audiras");
-		ImageIcon icon = new ImageIcon(Settings.ICO.getAbsolutePath());
+		ImageIcon icon = new ImageIcon(FileConst.ICO_FILE.getAbsolutePath());
 		this.setIconImage(icon.getImage());
 
 		this.setMaximumSize(DIM);
