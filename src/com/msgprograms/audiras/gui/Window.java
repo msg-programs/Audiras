@@ -11,7 +11,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.msgprograms.audiras.main.RadioMain;
-import com.msgprograms.audiras.settings.FileConst;
 import com.msgprograms.audiras.settings.Lang;
 import com.msgprograms.audiras.settings.Settings;
 
@@ -31,7 +30,7 @@ public class Window extends JFrame implements ChangeListener {
 
 	public Window() {
 		super("Audiras");
-		ImageIcon icon = new ImageIcon(FileConst.ICO_FILE.getAbsolutePath());
+		ImageIcon icon = new ImageIcon(Settings.ICO_FILE.getAbsolutePath());
 		this.setIconImage(icon.getImage());
 
 		this.setMaximumSize(DIM);
@@ -45,7 +44,7 @@ public class Window extends JFrame implements ChangeListener {
 			public void windowClosing(WindowEvent e) {
 				dispose();
 				RadioMain.win = null;
-				System.exit(0);
+//				System.exit(0);
 			}
 		});
 

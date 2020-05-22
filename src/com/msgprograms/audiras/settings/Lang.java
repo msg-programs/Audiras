@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class Lang {
 
-	static final File LANG = new File(FileConst.THIS_DIR + "/data/lang_" + Settings.getLang() + ".txt");
+	public static final File LANG = new File(Settings.DATA_DIR+ "/lang_" + Settings.getLang() + ".txt");
 	private static HashMap<String, String> trans = new HashMap<>();
 
 	public static void init() {

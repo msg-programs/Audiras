@@ -23,7 +23,6 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
 import com.msgprograms.audiras.gui.Window;
-import com.msgprograms.audiras.settings.FileConst;
 import com.msgprograms.audiras.settings.Lang;
 import com.msgprograms.audiras.settings.Settings;
 import com.msgprograms.audiras.streamlogic.RecordingMaster;
@@ -34,7 +33,6 @@ public class RadioMain {
 	public static Window win = null;
 
 	public static void main(String[] args) {
-		FileConst.init();
 		Settings.init();
 		Lang.init();
 		StationList.init();
@@ -65,7 +63,7 @@ public class RadioMain {
 
 			Image i = null;
 			try {
-				i = ImageIO.read(FileConst.ICO_FILE);
+				i = ImageIO.read(Settings.ICO_FILE);
 				if (i==null) {
 					throw new IOException("ico==null!");
 				}
