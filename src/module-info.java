@@ -1,4 +1,4 @@
-module audiras {
+module com.msgprograms.audiras {
 	exports com.msgprograms.audiras.main;
 	exports com.mpatric.mp3agic;
 	exports com.msgprograms.audiras.streamlogic;
