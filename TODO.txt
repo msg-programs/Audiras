@@ -1,4 +1,6 @@
 == hi prio TOOD
+re-check lang files
+first succ, then fail msg on failed stream add
 
 == low prio TODO
 
