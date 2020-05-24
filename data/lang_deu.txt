@@ -8,13 +8,13 @@ err_addTrayIcon=Konnte Taskleisten-Icon nicht erstellen!
 err_invFloat=Keine Kommazahl!
 err_invInt=Keine Ganzzahl!
 err_conn=Verbindungsfehler
-err_unsuppForm=Format nicht unterstützt!
+err_unsuppForm=Format nicht unterstÃ¼tzt!
 err_invMeta=Invalide Metadaten!
 err_noMetaInt=Kann diesen Stream nicht aufnehmen! (Kein Metaintervall gesendet)
 err_iniFile=Kann Speicherdatei nicht erstellen!
 err_noStreamFile=Streamliste nicht gefunden!
 err_streamFileRead=Fehler beim Lesen der Streamliste!
-err_streamAdd=Fehler beim Hinzufügen des Streams!
+err_streamAdd=Fehler beim HinzufÃ¼gen des Streams!
 err_invDir=Kann dieses Verzeichnis nicht verwenden!
 err_invLangFile=Keine Sprachdatei!
 err_createDir=Konnte Verzeichnis %s nicht erstellen!
@@ -38,9 +38,9 @@ check_startRec=Aufnahme beim Start beginnen
 
 // dropdown choices
 dd_numPer=Anzahl der Aufnahmen pro Stream
-dd_sizePer=Größe der Aufnahmen pro Stream
+dd_sizePer=GrÃ¶ÃŸe der Aufnahmen pro Stream
 dd_numAll=Anzahl aller Aufnahmen
-dd_sizeAll=Größe aller Aufnahmen
+dd_sizeAll=GrÃ¶ÃŸe aller Aufnahmen
 
 // buttons
 btn_masterStart=Alle starten
@@ -52,8 +52,8 @@ btn_save=Speichern
 btn_recordStream=Stream aufnehmen
 btn_addNewStream=Neuer Stream
 btn_alreadyThere=Bereits auf der Liste!
-btn_dirchange=Aufnahmeverzeichnis ändern
-btn_langchange=Sprache ändern
+btn_dirchange=Aufnahmeverzeichnis Ã¤ndern
+btn_langchange=Sprache Ã¤ndern
 
 // status
 stat_idle=Bereit
@@ -63,8 +63,8 @@ stat_full=Limit erreicht!
 // dialog
 msg=Info
 diag_reqStreamURL=URL des neuen Streams eingeben!
-diag_addSucc=Stream erfolgreich hinzugefügt!
-diag_requireRestart=Neustart nötig, Programm schließt sich.
+diag_addSucc=Stream erfolgreich hinzugefÃ¼gt!
+diag_requireRestart=Neustart nÃ¶tig, Programm schlieÃŸt sich.
 
 // tabs in window
 tab_record=Aufnehmen
@@ -72,5 +72,5 @@ tab_list=Durchsuchen
 tab_settings=Einstellungen
 
 // tray icon
-ti_open=Fenster öffnen
+ti_open=Fenster Ã¶ffnen
 ti_exit=Audiras beenden
