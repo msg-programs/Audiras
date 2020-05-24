@@ -2,6 +2,7 @@
 .recs
 .classpath
 .project
-/bin/*
 /data/streams.txt
 /bin/
+/Recordings
+/data/settings.ini
