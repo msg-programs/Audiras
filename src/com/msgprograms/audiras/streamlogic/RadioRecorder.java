@@ -36,6 +36,7 @@ public class RadioRecorder extends Thread {
 	private BufferQueue bufferQ;
 
 	private boolean first = true;
+	private static final String AD = "AD";
 
 	public RadioRecorder(RadioStation rs) {
 		this.rs = rs;
@@ -57,7 +58,6 @@ public class RadioRecorder extends Thread {
 			URLConnection toMusic = new URL(rs.meta.url).openConnection();
 			toMusic.setRequestProperty("Icy-MetaData", "1");
 			toMusic.setRequestProperty("Connection", "close");
-			toMusic.setRequestProperty("Accept", null);
 			toMusic.connect();
 
 			music = toMusic.getInputStream();
@@ -129,25 +129,34 @@ public class RadioRecorder extends Thread {
 			return;
 		}
 
+		
+		// ads have the StreamTitle field set to ''
+		// if this fails because of an empty string, assume current song is ad 
+		// and set strings to something we can check for later
 		try {
 			String entryOld = strOld.split(";")[0];
 			String valueOld = entryOld.split("=")[1];
 			String[] infoOld = valueOld.split("-");
+			prevC = infoOld[0].trim().replace("'", "");
+			prevT = infoOld[1].trim().replace("'", "");
+		} catch (ArrayIndexOutOfBoundsException e) {
+			prevC=AD;
+			prevT=AD;
+		}
 
+
+		try {
+			
 			String entryNew = strNew.split(";")[0];
 			String valueNew = entryNew.split("=")[1];
 			String[] infoNew = valueNew.split(" - ");
 
-			prevC = infoOld[0].trim().replace("'", "");
-			prevT = infoOld[1].trim().replace("'", "");
 			currC = infoNew[0].trim().replace("'", "");
 			currT = infoNew[1].trim().replace("'", "");
-		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println(strOld);
-			System.out.println(strNew);
-			rs.stopRec();
-			rs.hasError = true;
 			
+		} catch (ArrayIndexOutOfBoundsException e) {
+			currC=AD;
+			currT=AD;
 		}
 	}
 
@@ -156,8 +165,7 @@ public class RadioRecorder extends Thread {
 		try {
 			if (first) {
 				first = false;
-			} else {
-
+			} else if (!prevC.equals(AD) && !prevT.equals(AD)){
 				System.out.print("[" + rs.meta.name + "] Saving: " + prevC + " - " + prevT + ".mp3\n");
 				outStream.write(bufferQ.get(BufferQueue.MID));
 				outStream.write(bufferQ.get(BufferQueue.READ));
@@ -186,7 +194,6 @@ public class RadioRecorder extends Thread {
 			outStream.close();
 
 			outStream = new FileOutputStream(tmpFile);
-//			outStream.write(bufferQ.get(BufferQueue.READ));
 
 			rs.recalcFull();
 			if (rs.isFull) {
