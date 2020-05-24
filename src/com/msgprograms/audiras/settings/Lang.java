@@ -69,7 +69,6 @@ public class Lang {
 		trans.put("err_invDir", "Can't use this directory!");
 		trans.put("err_invLangFile", "Not a language file!");
 		trans.put("err_createDir", "Couldn't create the directory %s!");
-		trans.put("err_whereami", "Can't find current path name!");
 		trans.put("err_invStream", "Can't record this stream!");
 
 		// labels
@@ -89,8 +88,8 @@ public class Lang {
 		trans.put("check_startRec", "Start recording on program startup");
 
 		// dropdown choices
-		trans.put("dd_numPer", "Number of songs / stream");
-		trans.put("dd_sizePer", "Size of all songs / stream");
+		trans.put("dd_numPer", "Number of songs per stream");
+		trans.put("dd_sizePer", "Size of songs per stream");
 		trans.put("dd_numAll", "Number of all songs recorded");
 		trans.put("dd_sizeAll", "Size of all songs recorded");
 
@@ -101,7 +100,7 @@ public class Lang {
 		trans.put("btn_startRec", "Start recording");
 		trans.put("btn_stopRec", "Stop recording");
 		trans.put("btn_save", "Save");
-		trans.put("btn_recordStream", "Record Stream");
+		trans.put("btn_recordStream", "Record stream");
 		trans.put("btn_addNewStream", "Add new");
 		trans.put("btn_alreadyThere", "Already on list!");
 		trans.put("btn_dirchange", "Change recording directory");

@@ -18,6 +18,7 @@ err_streamAdd=Error while adding stream!
 err_invDir=Can't use this directory!
 err_invLangFile=Not a language file!
 err_createDir=Couldn't create the directory %s!
+err_invStream=Can't record this stream!
 
 // labels
 lbl_streams=Streams
@@ -37,7 +38,7 @@ check_startRec=Start recording on program startup
 
 // dropdown choices
 dd_numPer=Number of songs per stream
-dd_sizePer=Size of all songs per stream
+dd_sizePer=Size of songs per stream
 dd_numAll=Number of all songs recorded
 dd_sizeAll=Size of all songs recorded
 
@@ -48,7 +49,7 @@ btn_deleteStream=Remove stream
 btn_startRec=Start recording
 btn_stopRec=Stop recording
 btn_save=Save
-btn_recordStream=Record Stream
+btn_recordStream=Record stream
 btn_addNewStream=Add new
 btn_alreadyThere=Already on list!
 btn_dirchange=Change recording directory
