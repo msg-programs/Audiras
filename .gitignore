@@ -2,11 +2,5 @@
 .recs
 .classpath
 .project
-/bin/data/streams.txt
-/bin/gui/
-/bin/settings/
-/bin/main/
-/bin/streamlogic/
-/bin/com
-/bin/data/settings.ini
-/bin/
+/bin/*
+/data/streams.txt
