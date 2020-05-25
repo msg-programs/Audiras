@@ -2,7 +2,7 @@
 
 // errors
 err=Fehler
-err_astart=Fehler beim Erstellen der Autostart-Datei!
+err_astart=Fehler beim Erstellen/Löschen der Autostart-Datei!
 err_noTrayIco=Konnte Taskleisten-Icon nicht laden!
 err_addTrayIcon=Konnte Taskleisten-Icon nicht erstellen!
 err_invFloat=Keine Kommazahl!

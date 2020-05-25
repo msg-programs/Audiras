@@ -2,7 +2,7 @@
 
 // errors
 err=Error
-err_astart=Error while creating autostart file!
+err_astart=Error while creating/deleting autostart file!
 err_noTrayIco=Couldn't load the tray icon image!
 err_addTrayIcon=Couldn't create the tray icon!
 err_invFloat=Invalid float!
