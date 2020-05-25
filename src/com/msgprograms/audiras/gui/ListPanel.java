@@ -24,7 +24,7 @@ import com.msgprograms.audiras.streamlogic.StationList;
 public class ListPanel extends JPanel implements ActionListener, ListSelectionListener {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private DefaultTableModel model;
 	private JTable table;
 	private InfoPanel info;
@@ -120,7 +120,6 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 			moveRec.setEnabled(true);
 			moveRec.setText(Lang.get("btn_recordStream"));
 		}
-		
 
 	}
 
@@ -132,10 +131,15 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 		if (ae.getSource().equals(addS)) {
 			String url = (String) JOptionPane.showInputDialog(null, Lang.get("diag_reqStreamURL"));
 			if (StationList.isValidStream(url)) {
-				JOptionPane.showMessageDialog(null, Lang.get("diag_addSucc"), Lang.get("msg"), JOptionPane.INFORMATION_MESSAGE);
-				StationList.add(url);
+				if (StationList.add(url)) {
+					JOptionPane.showMessageDialog(null, Lang.get("diag_addSucc"), Lang.get("msg"),
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(null, Lang.get("err_streamAdd"), "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			} else {
-				JOptionPane.showMessageDialog(null, Lang.get("err_invStream"), Lang.get("err"),JOptionPane.ERROR_MESSAGE );
+				JOptionPane.showMessageDialog(null, Lang.get("err_invStream"), Lang.get("err"),
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 
@@ -151,10 +155,10 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 		if (rowNr >= 0) {
 			RadioStation rs = StationList.getStation(rowNr);
 			RecordingMaster.addStation(rs);
-			
+
 			moveRec.setEnabled(false);
 			moveRec.setText(Lang.get("btn_alreadyThere"));
-			
+
 			updateExtTable = true;
 			return;
 
