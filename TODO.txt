@@ -1,12 +1,10 @@
 == hi prio TOOD
-re-check lang files
-first succ, then fail msg on failed stream add
 
 == low prio TODO
+settingpanel:	retry connection button
 
 == next update todo
 REDO GUI
-REDO SAVE
 refactor window
 ListPanel:		add search bar
 Lang:			multiline string support

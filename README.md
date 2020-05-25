@@ -1,6 +1,6 @@
 # === Readme - Audiras v1.2 ===
 
-## === THIS IS STILL WIP UNTIL A VERSION IS RELEASED
+## === THIS IS STILL WIP
 
 ## == By:  
 * msg (msg-programs on github)
