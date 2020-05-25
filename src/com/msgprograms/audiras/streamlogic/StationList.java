@@ -61,13 +61,14 @@ public class StationList {
 	}
 
 	// add inputted station to list of radiostations and the file FileConst.LIST_FILE
-	public static void add(String s) {
+	public static boolean add(String s) {
 		try {
 			Files.write(LIST_FILE.toPath(), new String(s + "\n").getBytes(), StandardOpenOption.APPEND);
 			RadioStation rs = new RadioStation(s, stations.size());
 			stations.add(rs);
+			return true;
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, Lang.get("err_streamAdd"), "Error", JOptionPane.ERROR_MESSAGE);
+			return false;
 		}
 	}
 
