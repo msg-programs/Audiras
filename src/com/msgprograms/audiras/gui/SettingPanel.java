@@ -3,7 +3,6 @@ package com.msgprograms.audiras.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FilenameFilter;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -13,7 +12,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.filechooser.FileFilter;
 
 import com.msgprograms.audiras.settings.Lang;
 import com.msgprograms.audiras.settings.Settings;
@@ -27,7 +25,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 	private JTextField block;
 	private JComboBox<String> mode;
 
-	private JButton save, dirchange, langchange;
+	private JButton dirchange, langchange;
 
 	private JLabel gb, dir, lang;
 
@@ -67,11 +65,6 @@ public class SettingPanel extends JPanel implements ActionListener {
 		block.setBounds(265, 75, 50, 20);
 		this.add(block);
 
-		save = new JButton(Lang.get("btn_save"));
-		save.setBounds(270, 207, 90, 20);
-		this.add(save);
-		save.addActionListener(this);
-
 		gb = new JLabel("GB");
 		gb.setBounds(316, 74, 20, 20);
 		gb.setVisible(Settings.getBlockCond() % 2 == 1);
@@ -98,11 +91,6 @@ public class SettingPanel extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-
-		if (ae.getSource().equals(save)) {
-			save();
-			return;
-		}
 
 		if (ae.getSource().equals(mode)) {
 			if (mode.getSelectedIndex() % 2 == 1) {
