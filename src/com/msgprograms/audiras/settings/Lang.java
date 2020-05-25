@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 public class Lang {
 
-	public static final File LANG = new File(Settings.DATA_DIR+ "/lang_" + Settings.getLang() + ".txt");
+	public static final File LANG = new File(Settings.DATA_DIR + "/lang_" + Settings.getLang() + ".txt");
 	private static HashMap<String, String> trans = new HashMap<>();
 
 	public static void init() {
@@ -40,12 +40,11 @@ public class Lang {
 
 	}
 
-
 	public static String get(String key) {
 		String r = trans.get(key);
 		if (r == null) {
-			System.err.println(key + " not found!");
-			return "MISSING";
+			addDefaultStrings();
+			return trans.get(key);
 		}
 		return r;
 	}
@@ -53,7 +52,7 @@ public class Lang {
 	private static void addDefaultStrings() {
 		// errors
 		trans.put("err", "Error");
-		trans.put("err_astart", "Error while creating autostart file!");
+		trans.put("err_astart", "Error while creating/deleting autostart file!");
 		trans.put("err_noTrayIco", "Couldn't load the tray icon image!");
 		trans.put("err_addTrayIcon", "Couldn't create the tray icon!");
 		trans.put("err_invFloat", "Invalid float!");
