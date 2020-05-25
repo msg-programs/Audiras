@@ -54,18 +54,14 @@ public class RadioStation {
 
 	boolean isFull() {
 		// num_all or size_all
-//		System.out.println(meta.name + " Checking if full...");
 		if (Settings.getBlockCond() >= 2) {
-//			System.out.println("Redirecting to master");
 			return RecordingMaster.isFull();
 		}
 
 		if (Settings.getBlockCond() == Settings.NUM_PER) {
-//			System.out.println(meta.name + " >= Comparing size of list (" + records.size() + ") to block max (" + Settings.getBlockMax()+")");
 			return records.size() >= (int) Settings.getBlockMax();
 		}
 
-//		System.out.println(meta.name + " Comparing size of files to block max (" + Settings.getBlockMax()+")");
 		return getRecSize() >= Settings.getBlockMax();
 
 	}
