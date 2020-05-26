@@ -46,8 +46,8 @@ public class RadioRecorder extends Thread {
 
 		if (!rs.streamdir.exists()) {
 			if (!rs.streamdir.mkdirs()) {
-				JOptionPane.showMessageDialog(null, String.format(Lang.get("err_createDir"), rs.streamdir),Lang.get("err"),
-						JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, String.format(Lang.get("err_createDir"), rs.streamdir),
+						Lang.get("err"), JOptionPane.ERROR_MESSAGE);
 				System.exit(0);
 			}
 		}
@@ -129,9 +129,8 @@ public class RadioRecorder extends Thread {
 			return;
 		}
 
-		
 		// ads have the StreamTitle field set to ''
-		// if this fails because of an empty string, assume current song is ad 
+		// if this fails because of an empty string, assume current song is ad
 		// and set strings to something we can check for later
 		try {
 			String entryOld = strOld.split(";")[0];
@@ -140,23 +139,22 @@ public class RadioRecorder extends Thread {
 			prevC = infoOld[0].trim().replace("'", "");
 			prevT = infoOld[1].trim().replace("'", "");
 		} catch (ArrayIndexOutOfBoundsException e) {
-			prevC=AD;
-			prevT=AD;
+			prevC = AD;
+			prevT = AD;
 		}
 
-
 		try {
-			
+
 			String entryNew = strNew.split(";")[0];
 			String valueNew = entryNew.split("=")[1];
 			String[] infoNew = valueNew.split(" - ");
 
 			currC = infoNew[0].trim().replace("'", "");
 			currT = infoNew[1].trim().replace("'", "");
-			
+
 		} catch (ArrayIndexOutOfBoundsException e) {
-			currC=AD;
-			currT=AD;
+			currC = AD;
+			currT = AD;
 		}
 	}
 
@@ -165,28 +163,33 @@ public class RadioRecorder extends Thread {
 		try {
 			if (first) {
 				first = false;
-			} else if (!prevC.equals(AD) && !prevT.equals(AD)){
-				System.out.print("[" + rs.meta.name + "] Saving: " + prevC + " - " + prevT + ".mp3\n");
+			} else if (!prevC.equals(AD) && !prevT.equals(AD)) {
 				outStream.write(bufferQ.get(BufferQueue.MID));
 				outStream.write(bufferQ.get(BufferQueue.READ));
 
 				Mp3File mp3 = new Mp3File(tmpFile);
-				ID3v1Tag tag = new ID3v1Tag();
 
-				mp3.setId3v1Tag(tag);
-				tag.setArtist(prevC);
-				tag.setTitle(prevT);
+				if (mp3.getLengthInSeconds() >= 15) {
+					System.out.print("[" + rs.meta.name + "] Saving: " + prevC + " - " + prevT + ".mp3\n");
 
-				String safeC = prevC.replace("*", "#").replace("<", "[").replace(">", "]").replace(":", "")
-						.replace("\"", "'").replace("\\", " ").replace("/", " ").replace("|", " ").replace("?", " ")
-						.trim();
-				String safeT = prevT.replace("*", "#").replace("<", "[").replace(">", "]").replace(":", "")
-						.replace("\"", "'").replace("\\", " ").replace("/", " ").replace("|", " ").replace("?", " ")
-						.trim();
+					ID3v1Tag tag = new ID3v1Tag();
 
-				if (!new File(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3").exists()) {
-					mp3.save(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3");
-					rs.records.add(new File(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3"));
+					mp3.setId3v1Tag(tag);
+					tag.setArtist(prevC);
+					tag.setTitle(prevT);
+
+					String safeC = prevC.replace("*", "#").replace("<", "[").replace(">", "]").replace(":", "")
+							.replace("\"", "'").replace("\\", " ").replace("/", " ").replace("|", " ").replace("?", " ")
+							.trim();
+					String safeT = prevT.replace("*", "#").replace("<", "[").replace(">", "]").replace(":", "")
+							.replace("\"", "'").replace("\\", " ").replace("/", " ").replace("|", " ").replace("?", " ")
+							.trim();
+
+					if (!new File(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3").exists()) {
+						mp3.save(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3");
+						rs.records
+								.add(new File(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3"));
+					}
 				}
 
 			}
