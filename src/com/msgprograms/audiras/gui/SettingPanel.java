@@ -163,6 +163,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 	}
 
 	public void save() {
+		System.out.println("Getting settings state");
 		Settings.setBlockMode(mode.getSelectedIndex());
 		Settings.setBlockMax(Float.parseFloat(block.getText()));
 		Settings.setStartOnBoot(startOnBoot.isSelected());

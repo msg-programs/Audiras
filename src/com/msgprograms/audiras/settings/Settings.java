@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
-import com.msgprograms.audiras.main.RadioMain;
 import com.msgprograms.audiras.streamlogic.RadioStation;
 import com.msgprograms.audiras.streamlogic.RecordingMaster;
 
