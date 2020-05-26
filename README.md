@@ -21,7 +21,7 @@
 
 ### List tab:
 * Left side: List of all streams available.
-* Right side Stream info, button to add stream to recording list, button to add stream currently not in the list.
+* Right side: Stream info, button to add stream to recording list, button to add stream currently not in the list.
 
 ### Settings tab:
 * Checkboxes: Should the program start on Windows startup? When the program is starting, start all recordings? When the program is run, show the window? 
