@@ -95,6 +95,12 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 
 	void populateTable() {
 
+		if (model.getRowCount() > 0) {
+			for (int i = model.getRowCount() - 1; i >= 0; i--) {
+				model.removeRow(i);
+			}
+		}
+		
 		String[] s = new String[1];
 
 		for (RadioStation rs : StationList.stations) {
@@ -134,6 +140,7 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 				if (StationList.add(url)) {
 					JOptionPane.showMessageDialog(null, Lang.get("diag_addSucc"), Lang.get("msg"),
 							JOptionPane.INFORMATION_MESSAGE);
+					populateTable();
 				} else {
 					JOptionPane.showMessageDialog(null, Lang.get("err_streamAdd"), "Error", JOptionPane.ERROR_MESSAGE);
 				}
