@@ -8,8 +8,8 @@
 - fixed "connection error" when current song has 0-length name (i.e. ads)
 - fixed bug where entering an invalid stream would show both a success and error message
 - fixed bug where server would return 400 invalid request, leading to connection error
+- fixed bug where stream added via GUI wouldn't show up
 - removed save settings button
-- 
 
 == v1.2 / v1.2b
 - test version
