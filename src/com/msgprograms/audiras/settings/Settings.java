@@ -58,6 +58,7 @@ public class Settings {
 	}
 
 	public static void save() {
+		System.out.println("Trying to save settings...");
 		try {
 			PrintStream out = new PrintStream(INI_FILE);
 
@@ -112,12 +113,11 @@ public class Settings {
 				JOptionPane.showMessageDialog(null, Lang.get("err_astart"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
-
-			if (!astart.exists()) {
-				return;
+			if (astart.exists()) {
+				astart.delete();
 			}
-			astart.delete();
 		}
+		System.out.println("Settings saved!");
 	}
 
 	public static String getStreamDir() {
