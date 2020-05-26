@@ -1,6 +1,4 @@
 == hi prio TOOD
-test saving
-
 
 == low prio TODO
 settingpanel:	retry connection button
@@ -8,6 +6,7 @@ settingpanel:	retry connection button
 == next update todo
 REDO GUI
 refactor window class
+settings for minimum song length
 ListPanel:		add search bar
 Lang:			multiline string support
 SettingPanel:	split: recording / program settings		

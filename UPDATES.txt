@@ -1,12 +1,15 @@
 === UPDATE LOG
 
 == v1.2.1
+- bugfixes and small updates
+- added song minimum length limit: songs < 15s won't be saved 
 - updated language files
 - fixed saving problems
 - fixed "connection error" when current song has 0-length name (i.e. ads)
 - fixed bug where entering an invalid stream would show both a success and error message
 - fixed bug where server would return 400 invalid request, leading to connection error
 - removed save settings button
+- 
 
 == v1.2 / v1.2b
 - test version
@@ -34,3 +37,4 @@
  
 == v1.0
 - first version
+- used Java 10 (install needed)
