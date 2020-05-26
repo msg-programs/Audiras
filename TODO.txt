@@ -1,13 +1,14 @@
 == hi prio TOOD
+test saving
+
 
 == low prio TODO
 settingpanel:	retry connection button
 
 == next update todo
 REDO GUI
-refactor window
+refactor window class
 ListPanel:		add search bar
 Lang:			multiline string support
 SettingPanel:	split: recording / program settings		
-				language switcher
 RecordPanel: 	update on stopped recording less ugly

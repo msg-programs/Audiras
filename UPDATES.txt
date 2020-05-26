@@ -8,7 +8,7 @@
 - fixed bug where server would return 400 invalid request, leading to connection error
 - removed save settings button
 
-== v1.2 = v1.2b
+== v1.2 / v1.2b
 - test version
 - now using JRE 13 image 
 - added directory picker for song saving location
