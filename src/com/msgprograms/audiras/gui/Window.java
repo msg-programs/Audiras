@@ -71,6 +71,7 @@ public class Window extends JFrame implements ChangeListener {
 		if (list.updateExtTable) {
 			record.populateTable();
 			list.updateExtTable = false;
+			Settings.save();
 		}
 		int idx = tabs.getSelectedIndex();
 		if (lastIdx == 2 && tabs.getSelectedIndex() != 2) {

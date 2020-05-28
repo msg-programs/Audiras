@@ -16,6 +16,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.settings.Settings;
 import com.msgprograms.audiras.streamlogic.RadioStation;
 import com.msgprograms.audiras.streamlogic.RecordingMaster;
 
@@ -123,9 +124,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-
 		updateGUI();
-
 	}
 
 	public void updateGUI() {
@@ -178,6 +177,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 			RecordingMaster.remove(rs);
 
 			model.removeRow(rowNr);
+			Settings.save();
 			
 		}
 		

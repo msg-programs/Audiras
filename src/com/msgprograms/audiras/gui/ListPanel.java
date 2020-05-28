@@ -17,6 +17,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.msgprograms.audiras.settings.Lang;
+import com.msgprograms.audiras.settings.Settings;
 import com.msgprograms.audiras.streamlogic.RadioStation;
 import com.msgprograms.audiras.streamlogic.RecordingMaster;
 import com.msgprograms.audiras.streamlogic.StationList;
@@ -167,6 +168,7 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 			moveRec.setText(Lang.get("btn_alreadyThere"));
 
 			updateExtTable = true;
+			Settings.save();
 			return;
 
 		}
