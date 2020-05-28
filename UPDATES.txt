@@ -1,5 +1,8 @@
 === UPDATE LOG
 
+== v1.2.2
+- saving settings now on adding/removing recorder to/from recorder list
+
 == v1.2.1
 - bugfixes and small updates
 - added song minimum length limit: songs < 15s won't be saved 
