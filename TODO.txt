@@ -1,4 +1,6 @@
 == hi prio TOOD
+add quotation to (autostart) paths
+write updater?
 
 == low prio TODO
 settingpanel:	retry connection button
