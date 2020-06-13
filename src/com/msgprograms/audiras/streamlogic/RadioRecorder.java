@@ -65,7 +65,6 @@ public class RadioRecorder extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 			rs.stopRec();
-			rs.hasError = true;
 			rs.meta.error = Lang.get("err_conn");
 		}
 
@@ -104,7 +103,6 @@ public class RadioRecorder extends Thread {
 			System.err.println("Error while writing in Recorder for stream " + rs.meta.name);
 			e.printStackTrace();
 			rs.stopRec();
-			rs.hasError = true;
 			rs.meta.error = Lang.get("err_conn");
 		}
 	}
@@ -185,10 +183,17 @@ public class RadioRecorder extends Thread {
 							.replace("\"", "'").replace("\\", " ").replace("/", " ").replace("|", " ").replace("?", " ")
 							.trim();
 
-					if (!new File(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3").exists()) {
-						mp3.save(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3");
-						rs.records
-								.add(new File(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3"));
+					File targetFile = new File(rs.streamdir.getAbsolutePath() + "\\" + safeC + " - " + safeT + ".mp3");
+
+					if (!targetFile.exists()) {
+						try {
+							mp3.save(targetFile.getAbsolutePath());
+							rs.records.add(targetFile);
+						} catch (Exception e) {
+							targetFile.delete();
+							rs.restart();
+							return;
+						}
 					}
 				}
 

@@ -11,7 +11,6 @@ public class RadioStation {
 	public StreamMeta meta;
 
 	public boolean isRecording = false;
-	public boolean hasError = false;
 	public boolean isFull = false;
 
 	public ArrayList<File> records = new ArrayList<>();
@@ -24,11 +23,6 @@ public class RadioStation {
 
 		this.meta = new StreamMeta(url);
 		this.id = id;
-
-		if (meta.error != null) {
-			hasError = true;
-		}
-		
 		resetStreamDir();
 
 		doDirScan();
@@ -94,7 +88,7 @@ public class RadioStation {
 
 	public String getStatus() {
 
-		if (hasError) {
+		if (meta.error != null) {
 			return meta.error;
 		}
 
@@ -115,7 +109,7 @@ public class RadioStation {
 
 	public String getButtonStatus() {
 
-		if (!isRecording || hasError || isFull) {
+		if (!isRecording || meta.error != null || isFull) {
 			return Lang.get("btn_startRec");
 		}
 
@@ -128,5 +122,10 @@ public class RadioStation {
 	public void resetStreamDir() {
 		streamdir = new File(Settings.getStreamDir() + "\\" + meta.name);
 		
+	}
+
+	public void restart() {
+		stopRec();
+		startRec();
 	}
 }

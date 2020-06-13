@@ -142,7 +142,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 			rs.recalcFull();
 			recToggle.setText(rs.getButtonStatus());
 			delete.setEnabled(true);
-			if (rs.hasError) {
+			if (rs.meta.error != null) {
 				recToggle.setText(Lang.get("btn_startRec"));
 				recToggle.setEnabled(false);
 			}
