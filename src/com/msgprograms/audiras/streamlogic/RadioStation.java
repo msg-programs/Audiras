@@ -76,6 +76,7 @@ public class RadioStation {
 
 	public void startRec() {
 		if (!isFull && !isRecording) {
+			System.out.println("Started RStation " + meta.name);
 			new RadioRecorder(this);
 			isRecording = true;
 		}
