@@ -1,9 +1,8 @@
 == hi prio TOOD
-add quotation to (autostart) paths
-write updater?
 
 == low prio TODO
 settingpanel:	retry connection button
+write updater?
 
 == next update todo
 REDO GUI
@@ -11,5 +10,6 @@ refactor window class
 settings for minimum song length
 ListPanel:		add search bar
 Lang:			multiline string support
-SettingPanel:	split: recording / program settings		
+SettingPanel:	split recording / program settings		
 RecordPanel: 	update on stopped recording less ugly
+				show recorded stuff progress
