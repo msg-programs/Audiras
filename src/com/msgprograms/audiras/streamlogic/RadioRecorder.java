@@ -42,6 +42,7 @@ public class RadioRecorder extends Thread {
 		this.rs = rs;
 		this.blocksize = rs.meta.metaInt;
 		this.first = true;
+		
 		bufferQ = new BufferQueue(blocksize);
 
 		if (!rs.streamdir.exists()) {
@@ -166,8 +167,9 @@ public class RadioRecorder extends Thread {
 				outStream.write(bufferQ.get(BufferQueue.READ));
 
 				Mp3File mp3 = new Mp3File(tmpFile);
+				
 
-				if (mp3.getLengthInSeconds() >= 15) {
+				if (mp3.getLengthInSeconds() >= 30) {
 					System.out.print("[" + rs.meta.name + "] Saving: " + prevC + " - " + prevT + ".mp3\n");
 
 					ID3v1Tag tag = new ID3v1Tag();
@@ -192,6 +194,7 @@ public class RadioRecorder extends Thread {
 						} catch (Exception e) {
 							targetFile.delete();
 							rs.restart();
+							e.printStackTrace();
 							return;
 						}
 					}
@@ -202,10 +205,10 @@ public class RadioRecorder extends Thread {
 			outStream.close();
 
 			outStream = new FileOutputStream(tmpFile);
-
+			
 			rs.recalcFull();
 			if (rs.isFull) {
-//				System.out.println("Recorder for " + rs.meta.name + " is full!");
+				System.out.println("Recorder for " + rs.meta.name + " is full!");
 				rs.stopRec();
 				return;
 			}
