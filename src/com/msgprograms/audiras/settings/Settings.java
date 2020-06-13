@@ -24,16 +24,16 @@ public class Settings {
 	public static final int SIZE_PER = 1;
 	public static final int NUM_ALL = 2;
 	public static final int SIZE_ALL = 3;
-	
+
 	public static final File THIS_DIR = new File(".");
 	public static final File DATA_DIR = new File((THIS_DIR.getAbsolutePath() + "\\data").replace("\\.\\", "\\"));
 	public static final File ICO_FILE = new File(DATA_DIR.getAbsolutePath() + "\\icon.png");
 	public static final File INI_FILE = new File(DATA_DIR.getAbsolutePath() + "\\settings.ini");
 
 	public static void init() {
-		
+
 		settings.put("lang", "eng");
-		
+
 		try {
 			INI_FILE.createNewFile();
 		} catch (IOException e) {
@@ -104,7 +104,7 @@ public class Settings {
 				PrintWriter pw = new PrintWriter(astart);
 
 				pw.println("@echo off");
-				pw.println("cd /D " + THIS_DIR.getAbsolutePath().replace("\\.\\", "\\"));
+				pw.println("cd /D \"" + THIS_DIR.getAbsolutePath().replace("\\.\\", "\\") + "\"");
 				pw.println("call Audiras.bat");
 				pw.close();
 			} catch (FileNotFoundException e) {
