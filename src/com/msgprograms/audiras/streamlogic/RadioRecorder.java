@@ -43,7 +43,7 @@ public class RadioRecorder extends Thread {
 		this.blocksize = rs.meta.metaInt;
 		this.first = true;
 
-		bufferQ = new BufferQueue(blocksize);
+		bufferQ = new BufferQueue(0,1);
 
 		if (!rs.streamdir.exists()) {
 			if (!rs.streamdir.mkdirs()) {
@@ -82,19 +82,21 @@ public class RadioRecorder extends Thread {
 		try {
 
 			outStream = new FileOutputStream(tmpFile);
-			bufferQ.push(music.readNBytes(blocksize));
+			bufferQ.pushBuffer(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
-			bufferQ.push(music.readNBytes(blocksize));
+			bufferQ.pushBuffer(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
-			bufferQ.push(music.readNBytes(blocksize));
+			bufferQ.pushBuffer(music.readNBytes(blocksize));
+			bufferQ.pushMeta(readMeta());
+			bufferQ.pushBuffer(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
 			
 			while (rs.isRecording) {
-				bufferQ.push(music.readNBytes(blocksize));
+				bufferQ.pushBuffer(music.readNBytes(blocksize));
 				bufferQ.pushMeta(readMeta());
 				updateMeta();
 
-				outStream.write(bufferQ.get(BufferQueue.WRITE));
+				outStream.write(bufferQ.pop());
 
 				if (check()) {
 					save();
@@ -120,8 +122,8 @@ public class RadioRecorder extends Thread {
 		String strOld = "";
 		String strNew = "";
 		try {
-			strOld = new String(bufferQ.getMeta(BufferQueue.MID_LO), "UTF-8").trim();
-			strNew = new String(bufferQ.getMeta(BufferQueue.MID_HI), "UTF-8").trim();
+			strOld = new String(bufferQ.getMetaLo(), "UTF-8").trim();
+			strNew = new String(bufferQ.getMetaHi(), "UTF-8").trim();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -165,9 +167,11 @@ public class RadioRecorder extends Thread {
 			if (first) {
 				first = false;
 			} else if (!prevC.equals(AD) && !prevT.equals(AD)) {
-				outStream.write(bufferQ.get(BufferQueue.MID_HI));
-				outStream.write(bufferQ.get(BufferQueue.READ));
-
+				outStream.write(bufferQ.getBuffer(0));
+				outStream.write(bufferQ.getBuffer(1));
+				outStream.write(bufferQ.getBuffer(2));
+				outStream.write(bufferQ.getBuffer(3));
+				
 				Mp3File mp3 = new Mp3File(tmpFile);
 
 //				mp3.getLengthInSeconds() is buggy for some reason
@@ -205,7 +209,6 @@ public class RadioRecorder extends Thread {
 
 			outStream.close();
 			outStream = new FileOutputStream(tmpFile);
-			outStream.write(bufferQ.get(BufferQueue.WRITE));
 
 			rs.recalcFull();
 			if (rs.isFull) {

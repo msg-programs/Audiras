@@ -26,8 +26,7 @@ public class RadioMain {
 
 	public static void main(String[] args) {
 		test();
-//		
-		System.exit(0);
+//		System.exit(0);
 		
 		Settings.init();
 		Lang.init();
@@ -52,9 +51,9 @@ public class RadioMain {
 	}
 
 	private static void test() {
-		BufferQueue2 q = new BufferQueue2(0,1);
+		BufferQueue q = new BufferQueue(0,1);
 		byte[][] bytes = {{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}};
-		byte[][] meta  = {{1},{1},{1},{1},{1},{2},{2},{2},{2}, {2}, {3}, {3}, {3}, {3}, {3}};
+		byte[][] meta  = { {}, {}, {}, {}, {},{1}, {}, {}, {},  {}, {3},  {},  {},  {},  {}};
 		String res = "";
 		q.pushBuffer(bytes[0]);
 		q.pushMeta(meta[0]);
