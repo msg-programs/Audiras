@@ -1,10 +1,23 @@
-Version 1.2.4 is here with various bugfixes and some small improvements!
-Finally a proper release...
+Version 1.2.3 is here with various small bugfixes and updates!
 To install, download the .zip and unpack to \Audiras.
 To start the program, run Audiras.bat. Windows won't let you, but it's safe.  
 
+== 1.2.3 Update Notes
+- now correctly joins song titles with dashes
+- now restarts recorder for stream when mp3 library fails to save the file instead of crashing
+- fixed song length minimum triggering on ALL songs
+- fixed song start/end being cut off sometimes  
+- fixed bug where spaces in the executable path would break autostart
+- increased minimum song length to 30s
 
-
-Version 1.2.4 ist da, mit einigen Fehlerbehebungen und kleinen Verbesserungen!
+Version 1.2.3 ist da, mit einigen kleinen Fehlerbehebungen und Verbesserungen!
 Zum Installieren .zip nach \Audiras entpacken
 Zum Starten Audiras.bat ausführen. Windows will zwar nicht, aber es ist sicher.
+
+== 1.2.3 Updatenotizen
+- Songtitel mit Bindestrich werden nun korrekt benannt
+- Falls die mp3-Bibliothek die Datei nicht speichern kann, wird Aufnahme für diesen Stream neu gestartet 
+- Mindestlänge wird nun korrekt angewendet. Vorher wurde manchmal keine Datei gespeichert
+- Anfang und Ende des Songs werden jetzt vollständing aufgenommen. Vorher waren sie manchmal abgeschnitten.
+- Leerzeichen im Dateipfad der Anwendung führen nicht mehr dazu, dass der Autostart nicht funktioniert
+- Mindest-Songlänge auf 30s erhöht.

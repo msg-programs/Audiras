@@ -1,13 +1,11 @@
 === UPDATE LOG
 
-== v.1.2.4
-- bugfixes
-- TODO now correctly joins names with multiple dashes
-- fixed song length minimum triggering on ALL songs 
-
-== v1.2.3
+== v.1.2.3
 - bugfixes and small updates
-- now restarts when mp3 library fails to save the file instead of crashing
+- now correctly joins names with multiple dashes
+- fixed song length minimum triggering on ALL songs
+- fixed song start/end being cut off sometimes  
+- now restarts recorder for stream when mp3 library fails to save the file instead of crashing
 - fixed bug where spaces in the path would break autostart
 - increased minimum song length to 30s
 

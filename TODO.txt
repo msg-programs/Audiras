@@ -1,12 +1,7 @@
 == hi prio TOOD
-streamwriter:   correctly join names with dashes
 settingpanel: 	add textfield for min song length
 
-== low prio TODO
-settingpanel:	retry connection button
-write updater?
-
-== next update todo
+== mid prio todo
 REDO GUI
 refactor window class
 settings for minimum song length
@@ -15,3 +10,8 @@ Lang:			multiline string support
 SettingPanel:	split recording / program settings		
 RecordPanel: 	update on stopped recording less ugly
 				show recorded stuff progress
+
+
+== low prio TODO
+settingpanel:	retry connection button
+
