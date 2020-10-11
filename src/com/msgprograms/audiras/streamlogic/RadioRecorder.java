@@ -35,14 +35,14 @@ public class RadioRecorder extends Thread {
 
 	private BufferQueue bufferQ;
 
-	private boolean first = true;
+	private boolean first = false;
 	private static final String AD = "AD";
 
 	public RadioRecorder(RadioStation rs) {
 		this.rs = rs;
 		this.blocksize = rs.meta.metaInt;
 		this.first = true;
-		
+
 		bufferQ = new BufferQueue(blocksize);
 
 		if (!rs.streamdir.exists()) {
@@ -86,7 +86,9 @@ public class RadioRecorder extends Thread {
 			bufferQ.pushMeta(readMeta());
 			bufferQ.push(music.readNBytes(blocksize));
 			bufferQ.pushMeta(readMeta());
-
+			bufferQ.push(music.readNBytes(blocksize));
+			bufferQ.pushMeta(readMeta());
+			
 			while (rs.isRecording) {
 				bufferQ.push(music.readNBytes(blocksize));
 				bufferQ.pushMeta(readMeta());
@@ -118,8 +120,8 @@ public class RadioRecorder extends Thread {
 		String strOld = "";
 		String strNew = "";
 		try {
-			strOld = new String(bufferQ.getMeta(BufferQueue.WRITE), "UTF-8").trim();
-			strNew = new String(bufferQ.getMeta(BufferQueue.MID), "UTF-8").trim();
+			strOld = new String(bufferQ.getMeta(BufferQueue.MID_LO), "UTF-8").trim();
+			strNew = new String(bufferQ.getMeta(BufferQueue.MID_HI), "UTF-8").trim();
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -163,13 +165,13 @@ public class RadioRecorder extends Thread {
 			if (first) {
 				first = false;
 			} else if (!prevC.equals(AD) && !prevT.equals(AD)) {
-				outStream.write(bufferQ.get(BufferQueue.MID));
+				outStream.write(bufferQ.get(BufferQueue.MID_HI));
 				outStream.write(bufferQ.get(BufferQueue.READ));
 
 				Mp3File mp3 = new Mp3File(tmpFile);
-				
 
-				if (mp3.getLengthInSeconds() >= 30) {
+//				mp3.getLengthInSeconds() is buggy for some reason
+				if (tmpFile.length() * 8 / 1000 / rs.meta.bitrate >= 30) {
 					System.out.print("[" + rs.meta.name + "] Saving: " + prevC + " - " + prevT + ".mp3\n");
 
 					ID3v1Tag tag = new ID3v1Tag();
@@ -199,13 +201,12 @@ public class RadioRecorder extends Thread {
 						}
 					}
 				}
-
 			}
 
 			outStream.close();
-
 			outStream = new FileOutputStream(tmpFile);
-			
+			outStream.write(bufferQ.get(BufferQueue.WRITE));
+
 			rs.recalcFull();
 			if (rs.isFull) {
 				System.out.println("Recorder for " + rs.meta.name + " is full!");

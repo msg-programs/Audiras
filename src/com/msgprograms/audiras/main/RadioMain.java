@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import com.msgprograms.audiras.gui.Window;
 import com.msgprograms.audiras.settings.Lang;
 import com.msgprograms.audiras.settings.Settings;
+import com.msgprograms.audiras.streamlogic.BufferQueue;
 import com.msgprograms.audiras.streamlogic.RecordingMaster;
 import com.msgprograms.audiras.streamlogic.StationList;
 
@@ -24,6 +25,10 @@ public class RadioMain {
 	public static Window win = null;
 
 	public static void main(String[] args) {
+		test();
+//		
+		System.exit(0);
+		
 		Settings.init();
 		Lang.init();
 		StationList.init();
@@ -44,6 +49,36 @@ public class RadioMain {
 				Settings.save();
 			}
 		});
+	}
+
+	private static void test() {
+		BufferQueue2 q = new BufferQueue2(0,1);
+		byte[][] bytes = {{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15}};
+		byte[][] meta  = {{1},{1},{1},{1},{1},{2},{2},{2},{2}, {2}, {3}, {3}, {3}, {3}, {3}};
+		String res = "";
+		q.pushBuffer(bytes[0]);
+		q.pushMeta(meta[0]);
+		q.pushBuffer(bytes[1]);
+		q.pushMeta(meta[1]);
+		q.pushBuffer(bytes[2]);
+		q.pushMeta(meta[2]);
+		q.pushBuffer(bytes[3]);
+		q.pushMeta(meta[3]);
+		for (int i = 4; i< bytes.length; i++) {
+			q.pushBuffer(bytes[i]);
+			q.pushMeta(meta[i]);
+			res += q.pop()[0] + ",";
+			if (q.getMetaHi()[0]!=q.getMetaLo()[0]) {
+				res += q.getBuffer(0)[0] + ",";
+				res += q.getBuffer(1)[0]+ ",";
+				res += q.getBuffer(2)[0]+ ",";
+				res += q.getBuffer(3)[0]+ ",";
+				System.out.println(res);
+				res = "";
+			}
+		}
+		System.out.println(res);
+		
 	}
 
 	private static void initTrayIcon() {
