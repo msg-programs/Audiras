@@ -90,7 +90,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent ae) {
+	public void actionPerformed(@SuppressWarnings("exports") ActionEvent ae) {
 
 		if (ae.getSource().equals(mode)) {
 			if (mode.getSelectedIndex() % 2 == 1) {

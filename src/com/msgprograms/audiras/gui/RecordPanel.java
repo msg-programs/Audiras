@@ -123,7 +123,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 	}
 
 	@Override
-	public void valueChanged(ListSelectionEvent e) {
+	public void valueChanged(@SuppressWarnings("exports") ListSelectionEvent e) {
 		updateGUI();
 	}
 
@@ -157,7 +157,7 @@ public class RecordPanel extends JPanel implements ActionListener, ListSelection
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent ae) {
+	public void actionPerformed(@SuppressWarnings("exports") ActionEvent ae) {
 		if (ae.getSource().equals(masOn)) {
 			RecordingMaster.setAllOn();
 		} else 

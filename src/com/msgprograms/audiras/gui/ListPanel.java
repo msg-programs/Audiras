@@ -112,7 +112,7 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 	}
 
 	@Override
-	public void valueChanged(ListSelectionEvent e) {
+	public void valueChanged(@SuppressWarnings("exports") ListSelectionEvent e) {
 		int rowNr = table.getSelectedRow();
 		if (rowNr < 0) {
 			return;
@@ -131,7 +131,7 @@ public class ListPanel extends JPanel implements ActionListener, ListSelectionLi
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent ae) {
+	public void actionPerformed(@SuppressWarnings("exports") ActionEvent ae) {
 		if (ae.getSource().equals(moveRec)) {
 			moveRecorder();
 		}

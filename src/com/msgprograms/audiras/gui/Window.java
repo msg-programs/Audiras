@@ -67,7 +67,7 @@ public class Window extends JFrame implements ChangeListener {
 	}
 
 	@Override
-	public void stateChanged(ChangeEvent e) {
+	public void stateChanged(@SuppressWarnings("exports") ChangeEvent e) {
 		if (list.updateExtTable) {
 			record.populateTable();
 			list.updateExtTable = false;
