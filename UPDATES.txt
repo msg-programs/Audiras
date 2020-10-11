@@ -1,5 +1,10 @@
 === UPDATE LOG
 
+== v.1.2.4
+- bugfixes
+- TODO now correctly joins names with multiple dashes
+- fixed song length minimum triggering on ALL songs 
+
 == v1.2.3
 - bugfixes and small updates
 - now restarts when mp3 library fails to save the file instead of crashing

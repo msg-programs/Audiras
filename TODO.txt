@@ -1,4 +1,6 @@
 == hi prio TOOD
+streamwriter:   correctly join names with dashes
+settingpanel: 	add textfield for min song length
 
 == low prio TODO
 settingpanel:	retry connection button

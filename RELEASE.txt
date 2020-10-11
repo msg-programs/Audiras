@@ -1,11 +1,10 @@
-Version 1.2.1 is here with various bugfixes and some small improvements!
+Version 1.2.4 is here with various bugfixes and some small improvements!
 Finally a proper release...
 To install, download the .zip and unpack to \Audiras.
 To start the program, run Audiras.bat. Windows won't let you, but it's safe.  
 
 
 
-Version 1.2.1 ist da, mit einigen Fehlerbehebungen und kleinen Verbesserungen!
-Endlich eine richtige Version...
+Version 1.2.4 ist da, mit einigen Fehlerbehebungen und kleinen Verbesserungen!
 Zum Installieren .zip nach \Audiras entpacken
-Zum Starten Audiras.bat ausfÃ¼hren. Windows will nicht so wirklich, aber es ist sicher.
+Zum Starten Audiras.bat ausführen. Windows will zwar nicht, aber es ist sicher.
