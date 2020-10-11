@@ -1,16 +1,14 @@
 === UPDATE LOG
 
-== v.1.2.3
-- bugfixes and small updates
+== v.1.2.2
+- bugfixes and updates
+- saving settings now on adding/removing recorder to/from recorder list
 - now correctly joins names with multiple dashes
 - fixed song length minimum triggering on ALL songs
 - fixed song start/end being cut off sometimes  
 - now restarts recorder for stream when mp3 library fails to save the file instead of crashing
 - fixed bug where spaces in the path would break autostart
 - increased minimum song length to 30s
-
-== v1.2.2
-- saving settings now on adding/removing recorder to/from recorder list
 
 == v1.2.1
 - bugfixes and small updates
