@@ -127,20 +127,22 @@ public class RadioRecorder extends Thread {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-
+		
 		if (strOld.length() == 0 || strNew.length() == 0) {
 			return;
 		}
-
+		
 		// ads have the StreamTitle field set to ''
 		// if this fails because of an empty string, assume current song is ad
 		// and set strings to something we can check for later
 		try {
+			
 			String entryOld = strOld.split(";")[0];
 			String valueOld = entryOld.split("=")[1];
 			String[] infoOld = valueOld.split("-");
 			prevC = infoOld[0].trim().replace("'", "");
-			prevT = infoOld[1].trim().replace("'", "");
+			// join titles with dashes back together
+			prevT = String.join("-", infoOld).substring(prevC.length()+1).trim().replace("'", "");
 		} catch (ArrayIndexOutOfBoundsException e) {
 			prevC = AD;
 			prevT = AD;
@@ -150,10 +152,10 @@ public class RadioRecorder extends Thread {
 
 			String entryNew = strNew.split(";")[0];
 			String valueNew = entryNew.split("=")[1];
-			String[] infoNew = valueNew.split(" - ");
+			String[] infoNew = valueNew.split("-");
 
 			currC = infoNew[0].trim().replace("'", "");
-			currT = infoNew[1].trim().replace("'", "");
+			currT = String.join("-", infoNew).substring(currC.length()+1).trim().replace("'", "");
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			currC = AD;
