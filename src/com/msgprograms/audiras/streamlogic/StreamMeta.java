@@ -12,7 +12,7 @@ public class StreamMeta {
 
 	public String name = String.format("[%s]", Lang.get("err"));
 	public String genre = "???";
-	public String bitrate = "???";
+	public int bitrate = -1;
 	public String url = "???";
 	public String format = "???";
 	public int metaInt = -1;
@@ -57,7 +57,11 @@ public class StreamMeta {
 
 			name = res.get("icy-name").get(0);
 			genre = res.get("icy-genre").get(0);
-			bitrate = res.get("icy-br").get(0);
+			try {
+				bitrate = Integer.parseInt(res.get("icy-br").get(0));
+			} catch (NumberFormatException e) {
+				error = Lang.get("err_invMeta");
+			}
 
 		} catch (IndexOutOfBoundsException e) {
 //			System.err.println("Error while parsing metadata!");
