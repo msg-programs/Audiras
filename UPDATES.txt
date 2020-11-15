@@ -1,5 +1,10 @@
 === UPDATE LOG
 
+== v1.2.2.1
+- hotfix
+- now saves file names and metadata correctly
+- language changer now starts in correct directory
+
 == v.1.2.2
 - bugfixes and updates
 - saving settings now on adding/removing recorder to/from recorder list

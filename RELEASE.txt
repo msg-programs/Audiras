@@ -1,31 +1,21 @@
-Version 1.2.2 is here with various bugfixes and updates!
+Hotfix 1.2.2.1 is here!
 Copy stream list streams.txt from directory "data"
 To install, download the .zip and unpack to \Audiras.
 Insert stream list into new directory.
 To start the program, run Audiras.bat. Windows won't let you, but it's safe.  
 
 == Update Notes
-- now saves settings on adding/removing recorder to/from recorder list
-- now correctly joins song titles with dashes
-- now restarts recorder for stream when mp3 library fails to save the file instead of crashing
-- fixed song length minimum triggering on ALL songs
-- fixed song start/end being cut off sometimes  
-- fixed bug where spaces in the executable path would break autostart
-- increased minimum song length to 30s
+- now saves file names and metadata correctly
+- language changer now starts in correct directory
 
 ===============================================================================================================
 
-Version 1.2.2 ist da, mit einigen Fehlerbehebungen und Verbesserungen!
+Hotfix 1.2.2 ist da!
 Stream-Liste streams.txt im Ordner "data" kopieren.
 Zum Installieren .zip nach \Audiras entpacken.
 Stream-Liste im neuen data-Ordner einfügen.
 Zum Starten Audiras.bat ausführen. Windows will zwar nicht, aber es ist sicher.
 
 == Updatenotizen
-- Einstellungen werden nun beim Hinzufügen/Entfernen von Streams zu/von der Aufnahmeliste gespeichert
-- Songtitel mit Bindestrich werden nun korrekt benannt
-- Falls die mp3-Bibliothek die Datei nicht speichern kann, wird Aufnahme für diesen Stream neu gestartet 
-- Mindestlänge wird nun korrekt angewendet. Vorher wurde manchmal keine Datei gespeichert
-- Anfang und Ende des Songs werden jetzt vollständing aufgenommen. Vorher waren sie manchmal abgeschnitten.
-- Leerzeichen im Dateipfad der Anwendung führen nicht mehr dazu, dass der Autostart nicht funktioniert
-- Mindest-Songlänge auf 30s erhöht.
+- Dateiname und Metadaten werden nun richtig gespeichert
+- Sprachauswahl startet nun im richtigen Ordner
