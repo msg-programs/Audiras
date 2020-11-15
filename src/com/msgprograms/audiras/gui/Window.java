@@ -29,7 +29,7 @@ public class Window extends JFrame implements ChangeListener {
 	private int lastIdx = 0;
 
 	public Window() {
-		super("Audiras");
+		super("Audiras v" + RadioMain.VERSION);
 		ImageIcon icon = new ImageIcon(Settings.ICO_FILE.getAbsolutePath());
 		this.setIconImage(icon.getImage());
 

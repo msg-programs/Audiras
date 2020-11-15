@@ -22,6 +22,7 @@ import com.msgprograms.audiras.streamlogic.StationList;
 public class RadioMain {
 
 	public static Window win = null;
+	public static final String VERSION = "1.2.2.1";
 
 	public static void main(String[] args) {
 		Settings.init();
@@ -85,11 +86,12 @@ public class RadioMain {
 			Image i = null;
 			try {
 				i = ImageIO.read(Settings.ICO_FILE);
-				if (i==null) {
+				if (i == null) {
 					throw new IOException("ico==null!");
 				}
 			} catch (IOException e1) {
-				JOptionPane.showMessageDialog(null, Lang.get("err_noTrayIco"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, Lang.get("err_noTrayIco"), Lang.get("err"),
+						JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 			}
 
@@ -124,7 +126,8 @@ public class RadioMain {
 			try {
 				t.add(ti);
 			} catch (AWTException e) {
-				JOptionPane.showMessageDialog(null, Lang.get("err_addTrayIco"), Lang.get("err"), JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, Lang.get("err_addTrayIco"), Lang.get("err"),
+						JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 		}
