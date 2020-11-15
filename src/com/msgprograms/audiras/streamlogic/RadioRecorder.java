@@ -142,7 +142,7 @@ public class RadioRecorder extends Thread {
 			String[] infoOld = valueOld.split("-");
 			prevC = infoOld[0].trim().replace("'", "");
 			// join titles with dashes back together
-			prevT = String.join("-", infoOld).substring(prevC.length()+1).trim().replace("'", "");
+			prevT = String.join("-", infoOld).substring(valueOld.indexOf('-')+1).trim().replace("'", "");
 		} catch (ArrayIndexOutOfBoundsException e) {
 			prevC = AD;
 			prevT = AD;
@@ -155,7 +155,7 @@ public class RadioRecorder extends Thread {
 			String[] infoNew = valueNew.split("-");
 
 			currC = infoNew[0].trim().replace("'", "");
-			currT = String.join("-", infoNew).substring(currC.length()+1).trim().replace("'", "");
+			currT = String.join("-", infoNew).substring(valueNew.indexOf('-')+1).trim().replace("'", "");
 
 		} catch (ArrayIndexOutOfBoundsException e) {
 			currC = AD;
