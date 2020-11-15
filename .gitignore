@@ -5,4 +5,5 @@
 /bin/
 /Recordings
 /data/settings.ini
-TODO.txt
+./TODO.txt
+./make/*
