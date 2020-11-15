@@ -144,7 +144,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 		
 		if (ae.getSource().equals(langchange)) {
 			JFileChooser jfc = new JFileChooser();
-			jfc.setCurrentDirectory(Settings.THIS_DIR);
+			jfc.setCurrentDirectory(Settings.DATA_DIR);
 			int ret = jfc.showOpenDialog(null);
 
 			if (ret != JFileChooser.APPROVE_OPTION) {
@@ -153,7 +153,7 @@ public class SettingPanel extends JPanel implements ActionListener {
 
 			File f = jfc.getSelectedFile();
 			if (f != null && f.canRead() && f.getName().matches("lang_.{3}\\.txt")) {
-				Settings.setLang(f.getName().substring(5,8)); // lang_xxx.txt
+				Settings.setLang(f.getName().substring(5,8));
 				JOptionPane.showMessageDialog(null, Lang.get("diag_requireRestart"), Lang.get("msg"), JOptionPane.INFORMATION_MESSAGE);
 				System.exit(0);
 			} else {
